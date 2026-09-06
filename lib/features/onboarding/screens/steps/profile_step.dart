@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../../../data/providers/username_availability_providers.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../providers/onboarding_providers.dart';
 import '../../validation.dart';
+import '../../widgets/clearable_text_field.dart';
 import '../../widgets/continue_button.dart';
 import '../../widgets/step_back_button.dart';
 
@@ -121,51 +123,54 @@ class _ProfileStepState extends ConsumerState<ProfileStep> {
         const SizedBox(height: 20),
         Expanded(
           child: ListView(
+            // Clip.none + a little top padding: the OutlineInputBorder's
+            // floating label transition briefly overshoots the field's own
+            // top edge, and a scroll view's default hardEdge clip cuts that
+            // off right at the viewport boundary for whichever field sits
+            // first — this only ever showed up on ListView-based steps.
+            clipBehavior: Clip.none,
+            padding: const EdgeInsets.only(top: 8),
             children: [
-              TextField(
+              ClearableTextField(
                 controller: _usernameController,
+                labelText: l10n.onboardingUsernameLabel,
+                leadingIcon: PhosphorIconsRegular.user,
+                helperText: l10n.onboardingUsernameFormatHint,
                 onChanged: _onUsernameChanged,
-                decoration: InputDecoration(
-                  labelText: l10n.onboardingUsernameLabel,
-                  helperText: l10n.onboardingUsernameFormatHint,
-                  suffixIcon: _UsernameStatusIcon(status: _usernameStatus),
-                  errorText: switch (_usernameStatus) {
-                    _UsernameStatus.invalidFormat =>
-                      l10n.onboardingUsernameFormatHint,
-                    _UsernameStatus.taken => l10n.onboardingUsernameTaken,
-                    _ => null,
-                  },
-                ),
+                trailingStatus: _UsernameStatusIcon(status: _usernameStatus),
+                errorText: switch (_usernameStatus) {
+                  _UsernameStatus.invalidFormat =>
+                    l10n.onboardingUsernameFormatHint,
+                  _UsernameStatus.taken => l10n.onboardingUsernameTaken,
+                  _ => null,
+                },
               ),
               const SizedBox(height: 16),
-              TextField(
+              ClearableTextField(
                 controller: _firstNameController,
+                labelText: l10n.onboardingFirstNameLabel,
+                leadingIcon: PhosphorIconsRegular.user,
                 onChanged: (value) {
                   notifier.updateProfile(firstName: value);
                   setState(() => _firstNameTouched = true);
                 },
-                decoration: InputDecoration(
-                  labelText: l10n.onboardingFirstNameLabel,
-                  errorText:
-                      _firstNameTouched && !looksLikePlausibleName(firstName)
-                      ? l10n.onboardingNamePlausibilityHint
-                      : null,
-                ),
+                errorText:
+                    _firstNameTouched && !looksLikePlausibleName(firstName)
+                    ? l10n.onboardingNamePlausibilityHint
+                    : null,
               ),
               const SizedBox(height: 16),
-              TextField(
+              ClearableTextField(
                 controller: _lastNameController,
+                labelText: l10n.onboardingLastNameLabel,
+                leadingIcon: PhosphorIconsRegular.user,
                 onChanged: (value) {
                   notifier.updateProfile(lastName: value);
                   setState(() => _lastNameTouched = true);
                 },
-                decoration: InputDecoration(
-                  labelText: l10n.onboardingLastNameLabel,
-                  errorText:
-                      _lastNameTouched && !looksLikePlausibleName(lastName)
-                      ? l10n.onboardingNamePlausibilityHint
-                      : null,
-                ),
+                errorText: _lastNameTouched && !looksLikePlausibleName(lastName)
+                    ? l10n.onboardingNamePlausibilityHint
+                    : null,
               ),
             ],
           ),

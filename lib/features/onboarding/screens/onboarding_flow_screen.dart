@@ -10,7 +10,7 @@ import '../widgets/onboarding_scaffold.dart';
 import '../widgets/onboarding_step_transition.dart';
 import 'steps/completion_step.dart';
 import 'steps/country_language_step.dart';
-import 'steps/password_step.dart';
+import 'steps/email_password_step.dart';
 import 'steps/profile_step.dart';
 
 /// Hosts the first-launch onboarding wizard: owns step navigation, the
@@ -80,7 +80,7 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
       case OnboardingStep.profile:
         return ProfileStep(onNext: _goNext, onBack: _goBack);
       case OnboardingStep.password:
-        return PasswordStep(onNext: _goNext, onBack: _goBack);
+        return EmailPasswordStep(onNext: _goNext, onBack: _goBack);
       case OnboardingStep.completion:
         return CompletionStep(
           onFinished: () => _goHome(showTutorialPrompt: true),

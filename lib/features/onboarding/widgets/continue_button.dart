@@ -1,16 +1,24 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart' show AppColorsX;
+import '../../../core/utils/contrast_color.dart';
 
 /// The big, full-width "Continue" button pinned at the bottom of each
 /// onboarding step.
 ///
-/// On tap, a fixed-length glowing segment starts at one point on the
-/// button's perimeter, sweeps all the way around, and converges back on
-/// that exact same point — see [_GlowSegmentPainter] — then holds briefly
-/// once fully stopped before [onPressed] fires. Total time (sweep + hold)
-/// stays under design.md's ~1s budget for this kind of confirmation
-/// animation, so it reads as "processing," not as an artificial delay.
+/// On tap, plays a two-phase confirmation (see [_ButtonFxPainter]):
+/// 1. A glowing border traces the button's outline, growing from 0% of the
+///    perimeter at a fixed anchor point up to a full 100% loop back to
+///    that same point (the stroke's "end" travels all the way around
+///    while its "start" stays anchored) — not a fixed-length segment.
+/// 2. Once that loop closes, a small filled circle appears at the same
+///    anchor point and expands (a circular reveal) until it covers the
+///    whole button in [AppColors.accentPressed] — a visible "confirmed"
+///    fill sweep, not an instant color swap.
+///
+/// Only once both finish does [onPressed] fire.
 class ContinueButton extends StatefulWidget {
   const ContinueButton({
     super.key,
@@ -28,29 +36,34 @@ class ContinueButton extends StatefulWidget {
 }
 
 class _ContinueButtonState extends State<ContinueButton>
-    with SingleTickerProviderStateMixin {
-  static const _sweepDuration = Duration(milliseconds: 700);
-  static const _holdDuration = Duration(milliseconds: 180);
+    with TickerProviderStateMixin {
+  static const _ringDuration = Duration(milliseconds: 650);
+  static const _fillDuration = Duration(milliseconds: 400);
   static const _borderRadius = 26.0;
 
-  late final AnimationController _sweepController = AnimationController(
+  late final AnimationController _ringController = AnimationController(
     vsync: this,
-    duration: _sweepDuration,
+    duration: _ringDuration,
+  );
+  late final AnimationController _fillController = AnimationController(
+    vsync: this,
+    duration: _fillDuration,
   );
   bool _isProcessing = false;
 
   @override
   void dispose() {
-    _sweepController.dispose();
+    _ringController.dispose();
+    _fillController.dispose();
     super.dispose();
   }
 
   Future<void> _handleTap() async {
     if (!widget.enabled || _isProcessing) return;
     setState(() => _isProcessing = true);
-    await _sweepController.forward(from: 0);
+    await _ringController.forward(from: 0);
     if (!mounted) return;
-    await Future<void>.delayed(_holdDuration);
+    await _fillController.forward(from: 0);
     if (!mounted) return;
     setState(() => _isProcessing = false);
     widget.onPressed();
@@ -58,20 +71,32 @@ class _ContinueButtonState extends State<ContinueButton>
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+    // Computed once against the resting accent fill — accentPressed is
+    // consistently *lighter* than accent in both themes (see design.md's
+    // Color system), so this stays readable throughout the reveal sweep
+    // too without needing to recompute per frame.
+    final onAccent = readableTextColorFor(colors.accent);
+
     return SizedBox(
       width: double.infinity,
       height: 52,
       child: AnimatedBuilder(
-        animation: _sweepController,
+        animation: Listenable.merge([_ringController, _fillController]),
         builder: (context, child) {
           return CustomPaint(
             foregroundPainter: _isProcessing
-                ? _GlowSegmentPainter(
-                    progress: Curves.easeInOut.transform(
-                      _sweepController.value,
+                ? _ButtonFxPainter(
+                    ringProgress: Curves.easeOut.transform(
+                      _ringController.value,
                     ),
-                    color: context.colors.accent,
+                    fillProgress: Curves.easeOut.transform(
+                      _fillController.value,
+                    ),
                     borderRadius: _borderRadius,
+                    ringColor: colors.accent,
+                    fillColor: colors.accentPressed,
+                    textDirection: Directionality.of(context),
                   )
                 : null,
             child: child,
@@ -84,70 +109,66 @@ class _ContinueButtonState extends State<ContinueButton>
               borderRadius: BorderRadius.circular(_borderRadius),
             ),
           ),
-          child: Text(widget.label),
+          child: DefaultTextStyle.merge(
+            style: TextStyle(color: onAccent),
+            child: Text(widget.label),
+          ),
         ),
       ),
     );
   }
 }
 
-/// The perimeter fraction the glowing segment always spans while visible.
-const glowSegmentFraction = 0.22;
-
-/// A deliberate, tiny overshoot on the head position so the very last
-/// frame's segment overlaps its own closure point by a hair rather than
-/// landing exactly on it — floating-point/frame-timing slack right at
-/// closure otherwise reads as a hairline gap. Invisible mid-sweep; only
-/// matters in the last couple of pixels.
-const glowClosureOverlapPx = 1.5;
-
-/// The `(start, end)` ranges (in path-length pixels, for [PathMetric.
-/// extractPath]) to draw for the glow segment at a given [progress] (0.0 to
-/// 1.0) around a closed perimeter of length [total]:
-///
-/// - `0.0`: no ranges — zero-length, sitting at the path's start point.
-/// - Ramps up to full length ([glowSegmentFraction] of the perimeter) as
-///   its leading edge pulls away from the start point.
-/// - Holds that fixed length while sweeping the rest of the perimeter.
-/// - Shrinks back to zero-length as its trailing edge catches up to the
-///   leading edge, exactly at the start point again, at `progress == 1.0`.
-///
-/// So the glow visibly emerges from one point, travels the full loop, and
-/// converges back on that same point — rather than just growing outward
-/// from a fixed start like a simple progress ring.
-///
-/// [glowClosureOverlapPx] can push the head position past [total] in the
-/// final frames; a naive single range would then stop short at `total`,
-/// leaving a gap right at closure. When that happens this returns *two*
-/// ranges instead — `(tail, total)` and `(0, overflow)` — so the caller
-/// draws both pieces of the wrap rather than losing the overflow.
-List<(double, double)> glowSegmentRanges({
-  required double progress,
-  required double total,
-}) {
-  const totalHeadDistance = 1.0 + glowSegmentFraction;
-  final headRaw = progress * totalHeadDistance;
-  final head = headRaw.clamp(0.0, 1.0);
-  final tail = (headRaw - glowSegmentFraction).clamp(0.0, 1.0);
-  if (head <= tail) return const [];
-
-  final tailPx = tail * total;
-  final headPx = (head * total) + glowClosureOverlapPx;
-
-  if (headPx <= total) return [(tailPx, headPx)];
-  return [(tailPx, total), (0, headPx - total)];
+/// The anchor both animation phases share — a fixed point on the button's
+/// perimeter (its top corner at the *end* of reading order: top-right in
+/// LTR, top-left in RTL, via [AlignmentDirectional]) that the ring grows
+/// away from and the fill circle expands from.
+Offset buttonFxAnchor(Size size, TextDirection textDirection) {
+  return AlignmentDirectional.topEnd
+      .resolve(textDirection)
+      .withinRect(Offset.zero & size);
 }
 
-class _GlowSegmentPainter extends CustomPainter {
-  const _GlowSegmentPainter({
-    required this.progress,
-    required this.color,
+/// The circle radius needed, at a given [progress] (0.0-1.0), to fully
+/// cover a [size]-sized rect from [anchor] — i.e. the distance to the
+/// *farthest* corner, scaled by progress. At `progress == 1` the circle's
+/// edge reaches the farthest corner exactly, guaranteeing full coverage
+/// (the caller clips to the button's own rounded-rect shape, so a corner
+/// landing exactly on the circle's edge is enough — nothing outside the
+/// button's bounds needs covering).
+double revealRadiusFor({
+  required double progress,
+  required Size size,
+  required Offset anchor,
+}) {
+  final corners = [
+    Offset.zero,
+    Offset(size.width, 0),
+    Offset(0, size.height),
+    Offset(size.width, size.height),
+  ];
+  final maxDistance = corners
+      .map((corner) => (corner - anchor).distance)
+      .reduce(math.max);
+  return progress.clamp(0.0, 1.0) * maxDistance;
+}
+
+class _ButtonFxPainter extends CustomPainter {
+  const _ButtonFxPainter({
+    required this.ringProgress,
+    required this.fillProgress,
     required this.borderRadius,
+    required this.ringColor,
+    required this.fillColor,
+    required this.textDirection,
   });
 
-  final double progress;
-  final Color color;
+  final double ringProgress;
+  final double fillProgress;
   final double borderRadius;
+  final Color ringColor;
+  final Color fillColor;
+  final TextDirection textDirection;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -155,35 +176,48 @@ class _GlowSegmentPainter extends CustomPainter {
       Offset.zero & size,
       Radius.circular(borderRadius),
     );
-    final metric = (Path()..addRRect(rrect)).computeMetrics().first;
-    final total = metric.length;
-    final ranges = glowSegmentRanges(progress: progress, total: total);
-    if (ranges.isEmpty) return;
+    final anchor = buttonFxAnchor(size, textDirection);
 
-    // Butt caps (flat, ending exactly at the coordinate) rather than round
-    // — a round cap's dome can visually inset from the true endpoint,
-    // which reads as a gap right where the segment should meet flush with
-    // its own starting point.
-    final glow = Paint()
-      ..color = color.withValues(alpha: 0.35)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 8
-      ..strokeCap = StrokeCap.butt
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
-    final core = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5
-      ..strokeCap = StrokeCap.butt;
+    if (fillProgress > 0) {
+      final radius = revealRadiusFor(
+        progress: fillProgress,
+        size: size,
+        anchor: anchor,
+      );
+      canvas.save();
+      canvas.clipRRect(rrect);
+      canvas.drawCircle(anchor, radius, Paint()..color = fillColor);
+      canvas.restore();
+    }
 
-    for (final range in ranges) {
-      final part = metric.extractPath(range.$1, range.$2);
-      canvas.drawPath(part, glow);
-      canvas.drawPath(part, core);
+    if (ringProgress > 0 && fillProgress == 0) {
+      final metric = (Path()..addRRect(rrect)).computeMetrics().first;
+      final segment = metric.extractPath(
+        0,
+        metric.length * ringProgress.clamp(0.0, 1.0),
+      );
+
+      final glow = Paint()
+        ..color = ringColor.withValues(alpha: 0.35)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 8
+        ..strokeCap = StrokeCap.butt
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+      final core = Paint()
+        ..color = ringColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.5
+        ..strokeCap = StrokeCap.butt;
+
+      canvas.drawPath(segment, glow);
+      canvas.drawPath(segment, core);
     }
   }
 
   @override
-  bool shouldRepaint(covariant _GlowSegmentPainter oldDelegate) =>
-      oldDelegate.progress != progress || oldDelegate.color != color;
+  bool shouldRepaint(covariant _ButtonFxPainter oldDelegate) =>
+      oldDelegate.ringProgress != ringProgress ||
+      oldDelegate.fillProgress != fillProgress ||
+      oldDelegate.ringColor != ringColor ||
+      oldDelegate.fillColor != fillColor;
 }

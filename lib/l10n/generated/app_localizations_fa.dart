@@ -129,7 +129,22 @@ class AppLocalizationsFa extends AppLocalizations {
   String get onboardingNamePlausibilityHint => 'بهتره حداقل یک حرف داشته باشه';
 
   @override
-  String get onboardingPasswordStepTitle => 'رمز عبور';
+  String get onboardingPasswordStepTitle => 'ایمیل و رمز عبور';
+
+  @override
+  String get onboardingEmailLabel => 'ایمیل';
+
+  @override
+  String get onboardingEmailInvalid => 'یک ایمیل معتبر وارد کن';
+
+  @override
+  String get onboardingClearFieldTooltip => 'پاک کردن';
+
+  @override
+  String get onboardingShowPasswordTooltip => 'نمایش رمز عبور';
+
+  @override
+  String get onboardingHidePasswordTooltip => 'پنهان کردن رمز عبور';
 
   @override
   String get onboardingPasswordLabel => 'رمز عبور';
@@ -158,7 +173,7 @@ class AppLocalizationsFa extends AppLocalizations {
       'بهتره یک نماد ویژه هم داشته باشه (مثل !@#\$)';
 
   @override
-  String get onboardingCompletionMessage => '🎉 خوش اومدی! حسابت ساخته شد.';
+  String get onboardingCompletionGreeting => 'خوش اومدی';
 
   @override
   String get onboardingTutorialPromptQuestion =>

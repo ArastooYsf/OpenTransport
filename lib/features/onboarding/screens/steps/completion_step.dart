@@ -1,31 +1,35 @@
-import 'dart:math' as math;
-
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../providers/onboarding_providers.dart';
 import '../../widgets/continue_button.dart';
 
 /// Final screen after the 3-step stepper: a one-off celebratory moment
-/// (confetti, oversized congratulatory text — deliberately bigger than any
-/// other text size in the app, see design.md's "utility app, not an
-/// editorial one" type-scale rule, which this screen is the one exception
-/// to) before the user taps Continue and hands off to [onFinished], which
-/// the flow screen wires to navigate home. The tutorial-tour prompt is
-/// *not* shown here — it appears a beat after landing on the home screen
-/// (see `HomeScreen.showTutorialPrompt`), not on top of this screen.
-class CompletionStep extends StatefulWidget {
+/// (a single confetti burst, oversized congratulatory text — deliberately
+/// bigger than any other text size in the app, see design.md's "utility
+/// app, not an editorial one" type-scale rule, which this screen is the
+/// one exception to) before the user taps Continue and hands off to
+/// [onFinished], which the flow screen wires to navigate home. The
+/// tutorial-tour prompt is *not* shown here — it appears a beat after
+/// landing on the home screen (see `HomeScreen.showTutorialPrompt`), not on
+/// top of this screen. There's no "skip all" here either — see
+/// [OnboardingScaffold]; it makes no sense once everything's finished.
+class CompletionStep extends ConsumerStatefulWidget {
   const CompletionStep({super.key, required this.onFinished});
 
   final VoidCallback onFinished;
 
   @override
-  State<CompletionStep> createState() => _CompletionStepState();
+  ConsumerState<CompletionStep> createState() => _CompletionStepState();
 }
 
-class _CompletionStepState extends State<CompletionStep> {
-  static const _confettiDuration = Duration(seconds: 2, milliseconds: 500);
+class _CompletionStepState extends ConsumerState<CompletionStep> {
+  // A single short burst, not a multi-second stream — see confetti's own
+  // "explosive" blast mode below, which releases everything at once.
+  static const _confettiDuration = Duration(milliseconds: 300);
 
   late final ConfettiController _confettiController = ConfettiController(
     duration: _confettiDuration,
@@ -41,6 +45,13 @@ class _CompletionStepState extends State<CompletionStep> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final colors = context.colors;
+    final state = ref.watch(onboardingProvider);
+    final displayName = state.username.isNotEmpty
+        ? state.username
+        : state.firstName;
+    final headlineStyle = Theme.of(
+      context,
+    ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700);
 
     return Stack(
       alignment: Alignment.topCenter,
@@ -49,15 +60,21 @@ class _CompletionStepState extends State<CompletionStep> {
           children: [
             Expanded(
               child: Center(
-                child: Text(
-                  l10n.onboardingCompletionMessage,
-                  textAlign: TextAlign.center,
-                  // Bigger than any other text size in the app on purpose —
-                  // a one-off celebratory moment breaking the small,
-                  // utility-app type scale design.md otherwise calls for.
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      l10n.onboardingCompletionGreeting,
+                      textAlign: TextAlign.center,
+                      style: headlineStyle,
+                    ),
+                    if (displayName.isNotEmpty)
+                      Text(
+                        displayName,
+                        textAlign: TextAlign.center,
+                        style: headlineStyle?.copyWith(color: colors.accent),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -68,17 +85,16 @@ class _CompletionStepState extends State<CompletionStep> {
             ),
           ],
         ),
-        // Falls from the top of the screen, in the app's own palette
-        // (accent + semantic colors) rather than a random rainbow, so it
-        // reads as on-brand rather than a generic effect.
+        // A single emitter, top-center, firing one explosive burst — every
+        // piece releases at once rather than streaming continuously, then
+        // falls and fades under the confetti package's own gravity/fade.
         ConfettiWidget(
           confettiController: _confettiController,
-          blastDirection: math.pi / 2,
-          numberOfParticles: 24,
-          maxBlastForce: 12,
-          minBlastForce: 6,
-          emissionFrequency: 0.08,
-          gravity: 0.25,
+          blastDirectionality: BlastDirectionality.explosive,
+          numberOfParticles: 40,
+          maxBlastForce: 20,
+          minBlastForce: 10,
+          gravity: 0.3,
           shouldLoop: false,
           colors: [
             colors.accent,

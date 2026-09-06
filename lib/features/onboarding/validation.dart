@@ -21,6 +21,12 @@ bool looksLikePlausibleName(String name) {
   return _anyLetterPattern.hasMatch(trimmed);
 }
 
+/// A pragmatic, not-fully-RFC-5322 email check — good enough to catch
+/// obviously-malformed input without rejecting real addresses.
+final _emailPattern = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+
+bool isEmailFormatValid(String email) => _emailPattern.hasMatch(email);
+
 const passwordMinLength = 8;
 
 bool isPasswordLongEnough(String password) =>

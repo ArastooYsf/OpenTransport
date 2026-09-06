@@ -41,6 +41,10 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     );
   }
 
+  void updateEmail(String email) {
+    state = state.copyWith(email: email);
+  }
+
   void updatePassword(String password) {
     state = state.copyWith(password: password);
   }
@@ -103,7 +107,11 @@ double stepFillFraction(OnboardingState state, int stepIndex) {
       ].where((ok) => ok).length;
       return filled / 3;
     case 2:
-      return (state.password.length / passwordMinLength).clamp(0, 1);
+      final filled = [
+        isEmailFormatValid(state.email),
+        isPasswordLongEnough(state.password),
+      ].where((ok) => ok).length;
+      return filled / 2;
     default:
       return 1;
   }

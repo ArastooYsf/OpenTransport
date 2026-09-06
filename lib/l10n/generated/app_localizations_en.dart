@@ -133,7 +133,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'It\'s better if it has at least one letter';
 
   @override
-  String get onboardingPasswordStepTitle => 'Password';
+  String get onboardingPasswordStepTitle => 'Email & password';
+
+  @override
+  String get onboardingEmailLabel => 'Email';
+
+  @override
+  String get onboardingEmailInvalid => 'Enter a valid email address';
+
+  @override
+  String get onboardingClearFieldTooltip => 'Clear';
+
+  @override
+  String get onboardingShowPasswordTooltip => 'Show password';
+
+  @override
+  String get onboardingHidePasswordTooltip => 'Hide password';
 
   @override
   String get onboardingPasswordLabel => 'Password';
@@ -164,8 +179,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'It\'s better if it also has a special character (like !@#\$)';
 
   @override
-  String get onboardingCompletionMessage =>
-      '🎉 Welcome! Your account is ready.';
+  String get onboardingCompletionGreeting => 'Welcome';
 
   @override
   String get onboardingTutorialPromptQuestion =>

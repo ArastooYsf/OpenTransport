@@ -47,7 +47,12 @@
   "onboardingLastNameLabel": "نام خانوادگی",
   "onboardingNamePlausibilityHint": "بهتره حداقل یک حرف داشته باشه",
 
-  "onboardingPasswordStepTitle": "رمز عبور",
+  "onboardingPasswordStepTitle": "ایمیل و رمز عبور",
+  "onboardingEmailLabel": "ایمیل",
+  "onboardingEmailInvalid": "یک ایمیل معتبر وارد کن",
+  "onboardingClearFieldTooltip": "پاک کردن",
+  "onboardingShowPasswordTooltip": "نمایش رمز عبور",
+  "onboardingHidePasswordTooltip": "پنهان کردن رمز عبور",
   "onboardingPasswordLabel": "رمز عبور",
   "onboardingPasswordMinLengthNote": "بهتره حداقل ۸ کاراکتر باشه",
   "onboardingPasswordStrengthWeak": "ضعیف",
@@ -57,7 +62,7 @@
   "onboardingPasswordSuggestNumber": "بهتره یک عدد هم داشته باشه",
   "onboardingPasswordSuggestSpecialChar": "بهتره یک نماد ویژه هم داشته باشه (مثل !@#$)",
 
-  "onboardingCompletionMessage": "🎉 خوش اومدی! حسابت ساخته شد.",
+  "onboardingCompletionGreeting": "خوش اومدی",
   "onboardingTutorialPromptQuestion": "می‌خوای یه آموزش سریع از برنامه ببینی؟",
   "onboardingTutorialPromptNote": "همیشه می‌تونی این آموزش رو از تنظیمات دوباره اجرا کنی.",
   "onboardingTutorialShowButton": "دیدن آموزش",

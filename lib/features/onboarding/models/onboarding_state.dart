@@ -25,6 +25,7 @@ class OnboardingState with _$OnboardingState {
     @Default('') String username,
     @Default('') String firstName,
     @Default('') String lastName,
+    @Default('') String email,
     @Default('') String password,
   }) = _OnboardingState;
 }

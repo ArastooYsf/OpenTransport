@@ -21,11 +21,11 @@ Widget _harness(ProviderContainer container) {
 /// The two connecting-line segments' current animated widths, in tree
 /// order (segment 0 between circles 0–1, segment 1 between circles 1–2) —
 /// found by height, since each circle is also an [AnimatedContainer] but a
-/// fixed 32x32, distinct from a segment's 3px-tall bar.
+/// fixed 44x44, distinct from a segment's 6px-tall bar.
 List<double> _segmentWidths(WidgetTester tester) {
   return tester
       .widgetList<AnimatedContainer>(find.byType(AnimatedContainer))
-      .where((container) => container.constraints?.maxHeight == 3)
+      .where((container) => container.constraints?.maxHeight == 6)
       .map((container) => container.constraints!.maxWidth)
       .toList();
 }

@@ -83,15 +83,18 @@ void main() {
       expect(stepFillFraction(allThree, 1), 1);
     });
 
-    test('step 2 tracks password length toward the 8-char minimum', () {
-      expect(stepFillFraction(const OnboardingState(password: 'abcd'), 2), 0.5);
+    test('step 2 counts a valid email plus a long-enough password', () {
+      expect(stepFillFraction(const OnboardingState(), 2), 0);
+      expect(stepFillFraction(const OnboardingState(email: 'a@b.com'), 2), 0.5);
       expect(
         stepFillFraction(const OnboardingState(password: 'abcdefgh'), 2),
-        1,
+        0.5,
       );
-      // Never exceeds 1 even for a longer password.
       expect(
-        stepFillFraction(const OnboardingState(password: 'abcdefghijkl'), 2),
+        stepFillFraction(
+          const OnboardingState(email: 'a@b.com', password: 'abcdefgh'),
+          2,
+        ),
         1,
       );
     });

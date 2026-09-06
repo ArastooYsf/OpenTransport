@@ -61,8 +61,8 @@ void main() {
 
     await tester.tap(find.text('Continue'));
     await tester.pump(); // register the tap before advancing fake time
-    await tester.pump(const Duration(milliseconds: 750)); // glow sweep
-    await tester.pump(const Duration(milliseconds: 200)); // post-sweep hold
+    await tester.pump(const Duration(milliseconds: 700)); // growing ring
+    await tester.pump(const Duration(milliseconds: 450)); // circular fill
     await tester.pump(const Duration(milliseconds: 400)); // page transition
 
     expect(find.byType(OnboardingFlowScreen), findsOneWidget);

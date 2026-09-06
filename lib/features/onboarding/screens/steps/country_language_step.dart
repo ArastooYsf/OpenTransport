@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../../../core/providers/app_locale_provider.dart';
 import '../../../../core/utils/flag_emoji.dart';
@@ -58,6 +59,7 @@ class CountryLanguageStep extends ConsumerWidget {
         const SizedBox(height: 24),
         AutocompleteField<AvailableCountry>(
           label: l10n.onboardingCountryFieldLabel,
+          fieldIcon: PhosphorIconsRegular.globe,
           options: countries,
           searchableText: (country) => [
             ...country.name.values,
@@ -76,6 +78,7 @@ class CountryLanguageStep extends ConsumerWidget {
         const SizedBox(height: 16),
         AutocompleteField<String>(
           label: l10n.onboardingLanguageFieldLabel,
+          fieldIcon: PhosphorIconsRegular.translate,
           options: const ['en', 'fa'],
           searchableText: (code) => [_languageDisplayText(code), code],
           optionDisplayText: _languageDisplayText,

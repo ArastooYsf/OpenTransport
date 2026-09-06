@@ -18,17 +18,18 @@ Widget _appUnderTest(ProviderContainer container) {
   );
 }
 
-/// Taps the full-width Continue button and lets its glow-segment sweep
-/// (700ms) plus its post-sweep hold (180ms) finish before the step
-/// actually advances.
+/// Taps the full-width Continue button and lets its two-phase confirmation
+/// — the growing ring (650ms) then the circular accent-fill reveal (400ms)
+/// — finish before the step actually advances.
 Future<void> _tapContinue(WidgetTester tester) async {
   await tester.tap(find.text('Continue'));
   await tester.pump(); // register the tap before advancing fake time
-  // Strictly more than the nominal 700ms: an AnimationController's forward()
-  // future needs a small buffer past its exact duration to report complete
-  // in fake time (same quirk as AnimatedSwitcher — see greeting_screen_test).
-  await tester.pump(const Duration(milliseconds: 750)); // glow sweep
-  await tester.pump(const Duration(milliseconds: 200)); // post-sweep hold
+  // Strictly more than each nominal duration: an AnimationController's
+  // forward() future needs a small buffer past its exact duration to
+  // report complete in fake time (same quirk as AnimatedSwitcher — see
+  // greeting_screen_test).
+  await tester.pump(const Duration(milliseconds: 700)); // growing ring
+  await tester.pump(const Duration(milliseconds: 450)); // circular fill
   await tester.pump(const Duration(milliseconds: 400)); // step transition
 }
 
@@ -75,10 +76,11 @@ void main() {
 
     await _tapContinue(tester);
 
-    // --- Step 3: password ---
-    expect(find.text('Password'), findsWidgets);
+    // --- Step 3: email, then password ---
+    expect(find.text('Email & password'), findsOneWidget);
 
-    await tester.enterText(find.byType(TextField).first, 'Abcdefg1!');
+    await tester.enterText(find.byType(TextField).at(0), 'arastoo@example.com');
+    await tester.enterText(find.byType(TextField).at(1), 'Abcdefg1!');
     await tester.pump();
 
     expect(find.text('Strong'), findsOneWidget);
@@ -86,7 +88,9 @@ void main() {
     await _tapContinue(tester);
 
     // --- Completion ---
-    expect(find.textContaining('Welcome'), findsOneWidget);
+    expect(find.text('Welcome'), findsOneWidget);
+    expect(find.text('arastoo1'), findsOneWidget); // the username line
+    expect(find.text('Skip all'), findsNothing); // no skip on this screen
 
     // Tapping Continue here (through its own glow-sweep) hands off to Home
     // — the tutorial dialog does *not* appear on this screen anymore.

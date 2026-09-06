@@ -52,6 +52,13 @@ dependencies:
   # effect, no network calls at runtime, so it doesn't touch offline-first.
   confetti: ^0.8.0
 
+  # design.md's Iconography section: Phosphor Icons for a consistent
+  # outline/fill weight system. (Not `phosphor_flutter`: that package's
+  # IconData subclass fails to compile against this Flutter version, since
+  # IconData became a `final` class — `phosphor_icons` is the actively
+  # maintained, Flutter-3.43+-compatible alternative.)
+  phosphor_icons: ^3.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

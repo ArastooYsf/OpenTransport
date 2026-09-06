@@ -28,6 +28,7 @@ mixin _$OnboardingState {
   String get username => throw _privateConstructorUsedError;
   String get firstName => throw _privateConstructorUsedError;
   String get lastName => throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
 
   /// Create a copy of OnboardingState
@@ -52,6 +53,7 @@ abstract class $OnboardingStateCopyWith<$Res> {
     String username,
     String firstName,
     String lastName,
+    String email,
     String password,
   });
 }
@@ -78,6 +80,7 @@ class _$OnboardingStateCopyWithImpl<$Res, $Val extends OnboardingState>
     Object? username = null,
     Object? firstName = null,
     Object? lastName = null,
+    Object? email = null,
     Object? password = null,
   }) {
     return _then(
@@ -110,6 +113,10 @@ class _$OnboardingStateCopyWithImpl<$Res, $Val extends OnboardingState>
                 ? _value.lastName
                 : lastName // ignore: cast_nullable_to_non_nullable
                       as String,
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String,
             password: null == password
                 ? _value.password
                 : password // ignore: cast_nullable_to_non_nullable
@@ -137,6 +144,7 @@ abstract class _$$OnboardingStateImplCopyWith<$Res>
     String username,
     String firstName,
     String lastName,
+    String email,
     String password,
   });
 }
@@ -162,6 +170,7 @@ class __$$OnboardingStateImplCopyWithImpl<$Res>
     Object? username = null,
     Object? firstName = null,
     Object? lastName = null,
+    Object? email = null,
     Object? password = null,
   }) {
     return _then(
@@ -194,6 +203,10 @@ class __$$OnboardingStateImplCopyWithImpl<$Res>
             ? _value.lastName
             : lastName // ignore: cast_nullable_to_non_nullable
                   as String,
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String,
         password: null == password
             ? _value.password
             : password // ignore: cast_nullable_to_non_nullable
@@ -214,6 +227,7 @@ class _$OnboardingStateImpl implements _OnboardingState {
     this.username = '',
     this.firstName = '',
     this.lastName = '',
+    this.email = '',
     this.password = '',
   });
 
@@ -242,11 +256,14 @@ class _$OnboardingStateImpl implements _OnboardingState {
   final String lastName;
   @override
   @JsonKey()
+  final String email;
+  @override
+  @JsonKey()
   final String password;
 
   @override
   String toString() {
-    return 'OnboardingState(step: $step, countrySlug: $countrySlug, languageCode: $languageCode, languageTouchedByUser: $languageTouchedByUser, username: $username, firstName: $firstName, lastName: $lastName, password: $password)';
+    return 'OnboardingState(step: $step, countrySlug: $countrySlug, languageCode: $languageCode, languageTouchedByUser: $languageTouchedByUser, username: $username, firstName: $firstName, lastName: $lastName, email: $email, password: $password)';
   }
 
   @override
@@ -267,6 +284,7 @@ class _$OnboardingStateImpl implements _OnboardingState {
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
                 other.lastName == lastName) &&
+            (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
                 other.password == password));
   }
@@ -281,6 +299,7 @@ class _$OnboardingStateImpl implements _OnboardingState {
     username,
     firstName,
     lastName,
+    email,
     password,
   );
 
@@ -305,6 +324,7 @@ abstract class _OnboardingState implements OnboardingState {
     final String username,
     final String firstName,
     final String lastName,
+    final String email,
     final String password,
   }) = _$OnboardingStateImpl;
 
@@ -326,6 +346,8 @@ abstract class _OnboardingState implements OnboardingState {
   String get firstName;
   @override
   String get lastName;
+  @override
+  String get email;
   @override
   String get password;
 

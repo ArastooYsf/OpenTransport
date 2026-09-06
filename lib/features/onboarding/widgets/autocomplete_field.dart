@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../../core/utils/search_normalize.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 /// A typeahead field styled like a modern web form input: rounded, subtle
 /// border, floating label, live-filtered dropdown that updates per
@@ -21,6 +23,7 @@ class AutocompleteField<T extends Object> extends StatefulWidget {
     required this.onSelected,
     required this.noResultsText,
     this.optionLeading,
+    this.fieldIcon,
   });
 
   final String label;
@@ -31,6 +34,12 @@ class AutocompleteField<T extends Object> extends StatefulWidget {
   final ValueChanged<T> onSelected;
   final String noResultsText;
   final Widget Function(T option)? optionLeading;
+
+  /// A Phosphor icon representing what this field is for (e.g. a globe for
+  /// country, a translate glyph for language) — design.md's Iconography
+  /// section. Shown at the field's *start* edge (start of reading order,
+  /// not a hardcoded side), so it mirrors correctly in RTL.
+  final IconData? fieldIcon;
 
   @override
   State<AutocompleteField<T>> createState() => _AutocompleteFieldState<T>();
@@ -83,13 +92,31 @@ class _AutocompleteFieldState<T extends Object>
       optionsBuilder: (value) => _filter(value.text),
       onSelected: widget.onSelected,
       fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-        return TextField(
-          controller: controller,
-          focusNode: focusNode,
-          // Fill color, border radius, and border color all come from the
-          // app-wide InputDecorationTheme (see AppTheme) — every field
-          // shares one definition rather than repeating it per widget.
-          decoration: InputDecoration(labelText: widget.label),
+        final l10n = AppLocalizations.of(context);
+        return ValueListenableBuilder<TextEditingValue>(
+          valueListenable: controller,
+          builder: (context, value, _) {
+            return TextField(
+              controller: controller,
+              focusNode: focusNode,
+              // Fill color, border radius, and border color all come from
+              // the app-wide InputDecorationTheme (see AppTheme) — every
+              // field shares one definition rather than repeating it here.
+              decoration: InputDecoration(
+                labelText: widget.label,
+                prefixIcon: widget.fieldIcon == null
+                    ? null
+                    : Icon(widget.fieldIcon),
+                suffixIcon: value.text.isEmpty
+                    ? null
+                    : IconButton(
+                        icon: const Icon(PhosphorIconsRegular.x),
+                        tooltip: l10n.onboardingClearFieldTooltip,
+                        onPressed: () => controller.clear(),
+                      ),
+              ),
+            );
+          },
         );
       },
       optionsViewBuilder: (context, onSelected, optionsIterable) {

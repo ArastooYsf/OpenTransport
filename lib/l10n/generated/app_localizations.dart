@@ -311,8 +311,38 @@ abstract class AppLocalizations {
   /// Title of onboarding step 3.
   ///
   /// In en, this message translates to:
-  /// **'Password'**
+  /// **'Email & password'**
   String get onboardingPasswordStepTitle;
+
+  /// Email field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get onboardingEmailLabel;
+
+  /// Error text shown once the email field has been touched and doesn't look like a valid address.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get onboardingEmailInvalid;
+
+  /// Accessibility label for the trailing clear (X) icon on a text field.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get onboardingClearFieldTooltip;
+
+  /// Accessibility label for the password field's visibility toggle when the password is currently hidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get onboardingShowPasswordTooltip;
+
+  /// Accessibility label for the password field's visibility toggle when the password is currently shown.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get onboardingHidePasswordTooltip;
 
   /// Password field label.
   ///
@@ -362,11 +392,11 @@ abstract class AppLocalizations {
   /// **'It\'s better if it also has a special character (like !@#\$)'**
   String get onboardingPasswordSuggestSpecialChar;
 
-  /// Celebratory message on the final onboarding step.
+  /// Line 1 of the celebratory completion screen — short, large text.
   ///
   /// In en, this message translates to:
-  /// **'🎉 Welcome! Your account is ready.'**
-  String get onboardingCompletionMessage;
+  /// **'Welcome'**
+  String get onboardingCompletionGreeting;
 
   /// Question in the post-completion tutorial-offer dialog.
   ///
