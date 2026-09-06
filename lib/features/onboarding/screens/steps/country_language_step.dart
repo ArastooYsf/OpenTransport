@@ -11,10 +11,22 @@ import '../../providers/onboarding_providers.dart';
 import '../../widgets/autocomplete_field.dart';
 import '../../widgets/continue_button.dart';
 
-/// A language's own name, in its own script — language names are
-/// endonyms, not translated UI copy, so they aren't ARB entries (the same
-/// way a station's own-language name in schema.json isn't re-translated).
-const _nativeLanguageNames = <String, String>{'en': 'English', 'fa': 'فارسی'};
+/// A language's English name and its own endonym — e.g. `('Persian',
+/// 'فارسی')`. Displayed as "English (endonym)" regardless of the current UI
+/// locale, so the field reads the same way a native OS language picker
+/// does. Neither half is translated UI copy (an endonym is the language's
+/// own name for itself; the English name is a fixed label, not a string
+/// that changes per locale), so these aren't ARB entries — the same way a
+/// station's own-language name in schema.json isn't re-translated.
+const _languageNames = <String, (String english, String native)>{
+  'en': ('English', 'English'),
+  'fa': ('Persian', 'فارسی'),
+};
+
+String _languageDisplayText(String code) {
+  final names = _languageNames[code];
+  return names == null ? code : '${names.$1} (${names.$2})';
+}
 
 /// Step 1: country, then the app's language (pre-filled from the country's
 /// official language, but always user-confirmable via Next).
@@ -65,13 +77,17 @@ class CountryLanguageStep extends ConsumerWidget {
         AutocompleteField<String>(
           label: l10n.onboardingLanguageFieldLabel,
           options: const ['en', 'fa'],
-          searchableText: (code) => [_nativeLanguageNames[code] ?? code, code],
-          optionDisplayText: (code) => _nativeLanguageNames[code] ?? code,
+          searchableText: (code) => [_languageDisplayText(code), code],
+          optionDisplayText: _languageDisplayText,
           selected: selectedLanguageCode,
           onSelected: notifier.selectLanguage,
           noResultsText: l10n.onboardingAutocompleteNoMatches,
         ),
         const Spacer(),
+        // A guaranteed minimum gap before the primary action, per design.md's
+        // spacing scale (~32dp+ before a field group's button) — on top of
+        // whatever slack the Spacer above already contributes.
+        const SizedBox(height: 32),
         ContinueButton(
           label: l10n.onboardingContinueButton,
           enabled: selectedCountry != null && selectedLanguageCode != null,

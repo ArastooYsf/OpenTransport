@@ -19,9 +19,10 @@ Visual and interaction rules for the app. Every UI decision should be traceable 
 
 ## Typography
 
-- **Persian/Arabic script:** Shabnam FD (all weights available — use Regular for body, Medium/Bold for emphasis and headings).
-- **Latin script:** Rubik — a geometric, rounded-leaning sans-serif that stylistically pairs well with Shabnam FD's clean/modern character and fits the Material-inspired direction (Inter is an acceptable fallback if Rubik's language coverage is ever insufficient for a specific added country).
-- As more countries/scripts get added, pick each new script's pairing for the same geometric/modern character Shabnam FD + Rubik establish — don't let a mismatched font (e.g. an ornate serif) break the visual consistency.
+- **Persian/Arabic script:** Vazirmatn (a variable font — use Regular weight for body, Medium/SemiBold for emphasis and headings).
+- **Latin script:** Inter — a clean, modern grotesque that pairs naturally with Vazirmatn's geometric character and fits the Material-inspired direction.
+- Bundle both as local assets (`assets/fonts/`), never a runtime font-fetch — this app is offline-first, and type is no exception.
+- As more countries/scripts get added, pick each new script's pairing for the same geometric/modern character Vazirmatn + Inter establish — don't let a mismatched font (e.g. an ornate serif) break the visual consistency.
 - Type scale: keep it small — a heading size, a body size, a caption size, one weight for emphasis. Avoid introducing more than 3–4 sizes total; this is a utility app, not an editorial one.
 - Numerals (arrival times, line numbers): decide once whether to always show Western digits or locale-appropriate digits, and apply that rule everywhere consistently — mixed digit styles in the same screen look broken.
 

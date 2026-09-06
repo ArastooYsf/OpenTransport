@@ -77,6 +77,10 @@ class _PasswordStepState extends ConsumerState<PasswordStep> {
             ],
           ),
         ),
+        // A guaranteed minimum gap before the primary action, per
+        // design.md's spacing scale (~32dp+) so it reads as separate and
+        // final rather than another item in the stack.
+        const SizedBox(height: 32),
         ContinueButton(
           label: l10n.onboardingContinueButton,
           enabled: isPasswordLongEnough(password),

@@ -99,54 +99,105 @@ class _AutocompleteFieldState<T extends Object>
       optionsViewBuilder: (context, onSelected, optionsIterable) {
         final options = optionsIterable.toList();
         final query = normalizeSearchText(_controller.text.trim());
-        return Align(
-          alignment: AlignmentDirectional.topStart,
+        return _AnimatedOptionsPanel(
+          child: options.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(widget.noResultsText),
+                )
+              : ListView.separated(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  shrinkWrap: true,
+                  itemCount: options.length,
+                  separatorBuilder: (context, index) => Divider(
+                    height: 1,
+                    thickness: 1,
+                    indent: 16,
+                    endIndent: 16,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  ),
+                  itemBuilder: (context, index) {
+                    final option = options[index];
+                    return InkWell(
+                      onTap: () => onSelected(option),
+                      child: Container(
+                        constraints: const BoxConstraints(minHeight: 48),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Row(
+                          children: [
+                            if (widget.optionLeading case final leading?) ...[
+                              leading(option),
+                              const SizedBox(width: 12),
+                            ],
+                            Expanded(
+                              child: _HighlightedText(
+                                text: widget.optionDisplayText(option),
+                                query: query,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        );
+      },
+    );
+  }
+}
+
+/// Wraps the options list so it feels like a real overlay materializing
+/// out of the field — scaling and fading in from its top edge — rather
+/// than snapping into existence. `RawAutocomplete` gives this widget a
+/// fresh `optionsViewBuilder` call on every keystroke but keeps reusing the
+/// same `State` (same widget type, same position in the overlay's tree),
+/// so this entrance only plays once per focus-gain, not once per keystroke.
+class _AnimatedOptionsPanel extends StatefulWidget {
+  const _AnimatedOptionsPanel({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_AnimatedOptionsPanel> createState() => _AnimatedOptionsPanelState();
+}
+
+class _AnimatedOptionsPanelState extends State<_AnimatedOptionsPanel>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 200),
+  )..forward();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final curved = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    return Align(
+      alignment: AlignmentDirectional.topStart,
+      child: FadeTransition(
+        opacity: curved,
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.94, end: 1).animate(curved),
+          alignment: Alignment.topCenter,
           child: Material(
             elevation: 3,
             borderRadius: BorderRadius.circular(14),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 260),
-              child: options.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(widget.noResultsText),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      shrinkWrap: true,
-                      itemCount: options.length,
-                      itemBuilder: (context, index) {
-                        final option = options[index];
-                        return InkWell(
-                          onTap: () => onSelected(option),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            child: Row(
-                              children: [
-                                if (widget.optionLeading
-                                    case final leading?) ...[
-                                  leading(option),
-                                  const SizedBox(width: 12),
-                                ],
-                                Expanded(
-                                  child: _HighlightedText(
-                                    text: widget.optionDisplayText(option),
-                                    query: query,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+              child: widget.child,
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

@@ -170,6 +170,10 @@ class _ProfileStepState extends ConsumerState<ProfileStep> {
             ],
           ),
         ),
+        // A guaranteed minimum gap before the primary action, per
+        // design.md's spacing scale (~32dp+, noticeably more than the
+        // 16dp between fields above) so it reads as separate and final.
+        const SizedBox(height: 32),
         ContinueButton(
           label: l10n.onboardingContinueButton,
           enabled: _usernameStatus == _UsernameStatus.available,

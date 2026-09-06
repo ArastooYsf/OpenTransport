@@ -439,6 +439,11 @@ Riverpod/i18n/لایهٔ داده، دیتاست نمونهٔ تهران، و ا
 - [GTFS (General Transit Feed Specification)](https://gtfs.org) — ساختار
   `calendar`/`trips`/`stopTimes` در `schema.json` عمداً از آن الگو گرفته.
 - مستندات [Flutter](https://flutter.dev) و [Riverpod](https://riverpod.dev).
+- [وزیرمتن](https://github.com/rastikerdar/vazirmatn) و
+  [Inter](https://rsms.me/inter/) — فونت‌های فارسی/عربی و لاتین اپ (به بخش
+  Typography در `design.md` نگاه کنید)، هر دو در `assets/fonts/` قرار دارند
+  و تحت [SIL Open Font License](https://openfontlicense.org) منتشر شده‌اند
+  (فایل‌های `VAZIRMATN_OFL.txt` / `INTER_OFL.txt` را ببینید).
 - هر سازمان حمل‌ونقلی که یک فید باز GTFS یا پورتال داده باز منتشر می‌کند —
   منابع رسمی همیشه در اولویت‌اند؛ به
   [مشارکت در داده‌های حمل‌ونقل](CONTRIBUTING.md#contributing-transit-data-no-coding-required)

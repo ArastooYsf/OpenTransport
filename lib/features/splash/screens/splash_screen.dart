@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/navigation/fade_scale_page_route.dart';
-import '../../onboarding/screens/onboarding_flow_screen.dart';
+import '../../onboarding/screens/greeting_screen.dart';
 import '../widgets/pulsing_logo.dart';
 import '../widgets/splash_loading_bar.dart';
 
 /// The app's entry screen: logo + loading bar while the app initializes,
-/// then a hand-off into first-launch onboarding.
+/// then a hand-off into the first-launch greeting (which itself hands off
+/// into onboarding).
 ///
 /// There's no "has onboarding been completed before" check yet — that
 /// needs a persistence layer (Hive, per CLAUDE.md) this app doesn't have
@@ -27,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
       Navigator.of(
         context,
-      ).pushReplacement(fadeScalePageRoute(const OnboardingFlowScreen()));
+      ).pushReplacement(fadeScalePageRoute(const GreetingScreen()));
     });
   }
 

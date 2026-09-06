@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 
 /// The big, full-width "Continue" button pinned at the bottom of each
-/// onboarding step. On tap, traces an animated ring around its border
-/// (reading as "processing," not as a delay — design.md wants transitions
-/// fast, so this stays under ~600ms) before calling [onPressed], which the
-/// caller uses to advance to the next step.
+/// onboarding step.
+///
+/// On tap, a fixed-length glowing segment starts at one point on the
+/// button's perimeter, sweeps all the way around, and converges back on
+/// that exact same point — see [_GlowSegmentPainter] — then holds briefly
+/// once fully stopped before [onPressed] fires. Total time (sweep + hold)
+/// stays under design.md's ~1s budget for this kind of confirmation
+/// animation, so it reads as "processing," not as an artificial delay.
 class ContinueButton extends StatefulWidget {
   const ContinueButton({
     super.key,
@@ -25,22 +29,28 @@ class ContinueButton extends StatefulWidget {
 
 class _ContinueButtonState extends State<ContinueButton>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _ringController = AnimationController(
+  static const _sweepDuration = Duration(milliseconds: 700);
+  static const _holdDuration = Duration(milliseconds: 180);
+  static const _borderRadius = 26.0;
+
+  late final AnimationController _sweepController = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 450),
+    duration: _sweepDuration,
   );
   bool _isProcessing = false;
 
   @override
   void dispose() {
-    _ringController.dispose();
+    _sweepController.dispose();
     super.dispose();
   }
 
   Future<void> _handleTap() async {
     if (!widget.enabled || _isProcessing) return;
     setState(() => _isProcessing = true);
-    await _ringController.forward(from: 0);
+    await _sweepController.forward(from: 0);
+    if (!mounted) return;
+    await Future<void>.delayed(_holdDuration);
     if (!mounted) return;
     setState(() => _isProcessing = false);
     widget.onPressed();
@@ -52,13 +62,16 @@ class _ContinueButtonState extends State<ContinueButton>
       width: double.infinity,
       height: 52,
       child: AnimatedBuilder(
-        animation: _ringController,
+        animation: _sweepController,
         builder: (context, child) {
           return CustomPaint(
             foregroundPainter: _isProcessing
-                ? _RingTracePainter(
-                    progress: Curves.easeOut.transform(_ringController.value),
+                ? _GlowSegmentPainter(
+                    progress: Curves.easeInOut.transform(
+                      _sweepController.value,
+                    ),
                     color: AppTheme.accent,
+                    borderRadius: _borderRadius,
                   )
                 : null,
             child: child,
@@ -68,7 +81,7 @@ class _ContinueButtonState extends State<ContinueButton>
           onPressed: widget.enabled && !_isProcessing ? _handleTap : null,
           style: FilledButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(26),
+              borderRadius: BorderRadius.circular(_borderRadius),
             ),
           ),
           child: Text(widget.label),
@@ -78,30 +91,66 @@ class _ContinueButtonState extends State<ContinueButton>
   }
 }
 
-class _RingTracePainter extends CustomPainter {
-  const _RingTracePainter({required this.progress, required this.color});
+/// Paints a fixed-length glowing segment of the button's rounded-rect
+/// outline, at a position determined by [progress]:
+///
+/// - `0.0`: zero-length, sitting at the path's start point.
+/// - Ramps up to full length ([_segmentFraction] of the perimeter) as its
+///   leading edge pulls away from the start point.
+/// - Holds that fixed length while sweeping the rest of the perimeter.
+/// - Shrinks back to zero-length as its trailing edge catches up to the
+///   leading edge, exactly at the start point again, when `progress == 1.0`.
+///
+/// So the glow visibly emerges from one point, travels the full loop, and
+/// converges back on that same point — rather than just growing outward
+/// from a fixed start like a simple progress ring.
+class _GlowSegmentPainter extends CustomPainter {
+  const _GlowSegmentPainter({
+    required this.progress,
+    required this.color,
+    required this.borderRadius,
+  });
 
   final double progress;
   final Color color;
+  final double borderRadius;
+
+  static const _segmentFraction = 0.22;
+  static const _totalHeadDistance = 1.0 + _segmentFraction;
 
   @override
   void paint(Canvas canvas, Size size) {
     final rrect = RRect.fromRectAndRadius(
       Offset.zero & size,
-      const Radius.circular(26),
+      Radius.circular(borderRadius),
     );
-    final path = Path()..addRRect(rrect);
-    final paint = Paint()
+    final metric = (Path()..addRRect(rrect)).computeMetrics().first;
+    final total = metric.length;
+
+    final headRaw = progress * _totalHeadDistance;
+    final head = headRaw.clamp(0.0, 1.0);
+    final tail = (headRaw - _segmentFraction).clamp(0.0, 1.0);
+    if (head <= tail) return;
+
+    final segment = metric.extractPath(tail * total, head * total);
+
+    final glow = Paint()
+      ..color = color.withValues(alpha: 0.35)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8
+      ..strokeCap = StrokeCap.round
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+    canvas.drawPath(segment, glow);
+
+    final core = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5;
-
-    for (final metric in path.computeMetrics()) {
-      canvas.drawPath(metric.extractPath(0, metric.length * progress), paint);
-    }
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round;
+    canvas.drawPath(segment, core);
   }
 
   @override
-  bool shouldRepaint(covariant _RingTracePainter oldDelegate) =>
+  bool shouldRepaint(covariant _GlowSegmentPainter oldDelegate) =>
       oldDelegate.progress != progress || oldDelegate.color != color;
 }

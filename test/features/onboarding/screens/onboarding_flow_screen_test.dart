@@ -16,12 +16,17 @@ Widget _appUnderTest(ProviderContainer container) {
   );
 }
 
-/// Taps the full-width Continue button and lets its ~450ms processing-ring
-/// animation finish before the step actually advances.
+/// Taps the full-width Continue button and lets its glow-segment sweep
+/// (700ms) plus its post-sweep hold (180ms) finish before the step
+/// actually advances.
 Future<void> _tapContinue(WidgetTester tester) async {
   await tester.tap(find.text('Continue'));
   await tester.pump(); // register the tap before advancing fake time
-  await tester.pump(const Duration(milliseconds: 500)); // ring animation
+  // Strictly more than the nominal 700ms: an AnimationController's forward()
+  // future needs a small buffer past its exact duration to report complete
+  // in fake time (same quirk as AnimatedSwitcher — see greeting_screen_test).
+  await tester.pump(const Duration(milliseconds: 750)); // glow sweep
+  await tester.pump(const Duration(milliseconds: 200)); // post-sweep hold
   await tester.pump(const Duration(milliseconds: 400)); // step transition
 }
 
@@ -51,7 +56,7 @@ void main() {
     final languageField = tester.widget<TextField>(
       find.byType(TextField).at(1),
     );
-    expect(languageField.controller?.text, 'فارسی');
+    expect(languageField.controller?.text, 'Persian (فارسی)');
 
     await _tapContinue(tester);
 
