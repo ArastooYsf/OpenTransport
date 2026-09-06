@@ -7,7 +7,16 @@ import 'package:flutter/material.dart';
 /// multi-script font family as an open question, so typography uses the
 /// Material 3 default until that's decided.
 abstract final class AppTheme {
-  static const _accentSeed = Color(0xFF0891B2);
+  /// design.md's literal chosen accent hex. Exposed directly (rather than
+  /// only via [ColorScheme.primary]) for the handful of places design.md
+  /// calls out by exact color — e.g. the splash-screen loading bar — since
+  /// Material 3's seed-to-tonal-palette generation can shift the seed
+  /// color slightly and isn't guaranteed to preserve it exactly.
+  static const accent = Color(0xFF0891B2);
+
+  /// design.md's semantic colors — fixed, never derived from a line color.
+  static const success = Color(0xFF16A34A);
+  static const warning = Color(0xFFF59E0B);
 
   static ThemeData light() => _themeFrom(Brightness.light);
 
@@ -18,7 +27,7 @@ abstract final class AppTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: _accentSeed,
+        seedColor: accent,
         brightness: brightness,
       ),
       // Modern and light: flat surfaces, no heavy shadows (design.md).

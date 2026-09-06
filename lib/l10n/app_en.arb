@@ -18,5 +18,136 @@
   "loadError": "Couldn't load transit data.",
   "@loadError": {
     "description": "Shown when the bundled city JSON fails to load or parse."
-  }
+  },
+  "homeMetroTitle": "Metro",
+  "@homeMetroTitle": {
+    "description": "Home screen option: browse metro lines and stations."
+  },
+  "homeMetroSubtitle": "Lines & stations",
+  "@homeMetroSubtitle": {
+    "description": "Subtitle for the Metro option on the home screen."
+  },
+  "homeBrtTitle": "BRT",
+  "@homeBrtTitle": {
+    "description": "Home screen option: Bus Rapid Transit. Kept as the acronym in every language."
+  },
+  "homeBrtComingSoon": "Coming soon",
+  "@homeBrtComingSoon": {
+    "description": "Badge shown on the BRT option, which isn't fully built yet."
+  },
+  "homeSmartTitle": "Smart",
+  "@homeSmartTitle": {
+    "description": "Home screen option: find the easiest way to a destination or station, across all transport types."
+  },
+  "homeSmartSubtitle": "The easiest way to any destination or station",
+  "@homeSmartSubtitle": {
+    "description": "Subtitle explaining the Smart option on the home screen."
+  },
+  "placeholderComingSoonMessage": "This section is coming soon.",
+  "@placeholderComingSoonMessage": {
+    "description": "Body text on a placeholder screen for a feature that isn't built yet."
+  },
+
+  "commonConfirm": "Confirm",
+  "@commonConfirm": { "description": "Generic confirmation button label in a dialog." },
+  "commonCancel": "Cancel",
+  "@commonCancel": { "description": "Generic cancel button label in a dialog." },
+  "commonSkipAll": "Skip all",
+  "@commonSkipAll": { "description": "De-emphasized action to abandon a multi-step flow entirely." },
+
+  "onboardingStepIndicator": "Step {step} of {total}",
+  "@onboardingStepIndicator": {
+    "description": "Accessibility label for the onboarding progress bar.",
+    "placeholders": {
+      "step": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "onboardingSkipConfirmMessage": "If you skip, that's totally fine — you can still use the maps. But without an account you won't be able to: save your favorite routes, sync your settings across your devices, or contribute new data to the community.",
+  "@onboardingSkipConfirmMessage": {
+    "description": "Confirmation dialog shown when tapping 'Skip all' during onboarding."
+  },
+  "onboardingWithoutAccountTitle": "Without an account",
+  "@onboardingWithoutAccountTitle": {
+    "description": "Title of the one-time dialog shown after skipping onboarding."
+  },
+  "onboardingWithoutAccountIntro": "Without an account, you won't be able to:",
+  "@onboardingWithoutAccountIntro": {
+    "description": "Lead-in line before the bullet list in the post-skip notice dialog."
+  },
+  "onboardingWithoutAccountBulletSaveRoutes": "Save your favorite routes",
+  "@onboardingWithoutAccountBulletSaveRoutes": {
+    "description": "Bullet point in the post-skip notice dialog."
+  },
+  "onboardingWithoutAccountBulletSyncSettings": "Sync your settings across your devices",
+  "@onboardingWithoutAccountBulletSyncSettings": {
+    "description": "Bullet point in the post-skip notice dialog."
+  },
+  "onboardingWithoutAccountBulletContribute": "Add new data to the community",
+  "@onboardingWithoutAccountBulletContribute": {
+    "description": "Bullet point in the post-skip notice dialog."
+  },
+  "onboardingWithoutAccountDismiss": "Got it",
+  "@onboardingWithoutAccountDismiss": {
+    "description": "Dismiss button on the post-skip notice dialog."
+  },
+
+  "onboardingContinueButton": "Continue",
+  "@onboardingContinueButton": { "description": "The single, full-width primary action at the bottom of every onboarding step." },
+  "onboardingAutocompleteNoMatches": "No matches found",
+  "@onboardingAutocompleteNoMatches": { "description": "Shown in a step-1 dropdown (country or language) when the typed text matches nothing." },
+
+  "onboardingCountryLanguageStepTitle": "Country & language",
+  "@onboardingCountryLanguageStepTitle": { "description": "Title of onboarding step 1." },
+  "onboardingCountryFieldLabel": "Country",
+  "@onboardingCountryFieldLabel": { "description": "Floating label on the country autocomplete field." },
+  "onboardingLanguageFieldLabel": "Language",
+  "@onboardingLanguageFieldLabel": { "description": "Floating label on the language autocomplete field." },
+
+  "onboardingProfileStepTitle": "Tell us about yourself",
+  "@onboardingProfileStepTitle": { "description": "Title of onboarding step 2." },
+  "onboardingProfileStepSubtitle": "First and last name are optional",
+  "@onboardingProfileStepSubtitle": { "description": "Subtitle on step 2 — username is required, first/last name are not." },
+  "onboardingUsernameLabel": "Username",
+  "@onboardingUsernameLabel": { "description": "Username field label." },
+  "onboardingUsernameFormatHint": "English letters, digits, and _ only, 3–20 characters",
+  "@onboardingUsernameFormatHint": { "description": "Helper/format-error text under the username field." },
+  "onboardingUsernameTaken": "This username is already taken",
+  "@onboardingUsernameTaken": { "description": "Shown after the duplicate check finds the username is taken." },
+  "onboardingFirstNameLabel": "First name",
+  "@onboardingFirstNameLabel": { "description": "Optional first name field label." },
+  "onboardingLastNameLabel": "Last name",
+  "@onboardingLastNameLabel": { "description": "Optional last name field label." },
+  "onboardingNamePlausibilityHint": "It's better if it has at least one letter",
+  "@onboardingNamePlausibilityHint": { "description": "Gentle, non-blocking hint for a first/last name that's all digits/symbols." },
+
+  "onboardingPasswordStepTitle": "Password",
+  "@onboardingPasswordStepTitle": { "description": "Title of onboarding step 3." },
+  "onboardingPasswordLabel": "Password",
+  "@onboardingPasswordLabel": { "description": "Password field label." },
+  "onboardingPasswordMinLengthNote": "It's better if it's at least 8 characters",
+  "@onboardingPasswordMinLengthNote": { "description": "Neutral-toned note shown below 8 characters — the only hard requirement, phrased gently anyway." },
+  "onboardingPasswordStrengthWeak": "Weak",
+  "@onboardingPasswordStrengthWeak": { "description": "Strength-meter label: 0-1 extra criteria met." },
+  "onboardingPasswordStrengthGood": "Good",
+  "@onboardingPasswordStrengthGood": { "description": "Strength-meter label: 2 extra criteria met." },
+  "onboardingPasswordStrengthStrong": "Strong",
+  "@onboardingPasswordStrengthStrong": { "description": "Strength-meter label: 3 extra criteria met." },
+  "onboardingPasswordSuggestUppercase": "It's better if it also has an uppercase letter",
+  "@onboardingPasswordSuggestUppercase": { "description": "Non-blocking suggestion, not a requirement." },
+  "onboardingPasswordSuggestNumber": "It's better if it also has a number",
+  "@onboardingPasswordSuggestNumber": { "description": "Non-blocking suggestion, not a requirement." },
+  "onboardingPasswordSuggestSpecialChar": "It's better if it also has a special character (like !@#$)",
+  "@onboardingPasswordSuggestSpecialChar": { "description": "Non-blocking suggestion, not a requirement." },
+
+  "onboardingCompletionMessage": "🎉 Welcome! Your account is ready.",
+  "@onboardingCompletionMessage": { "description": "Celebratory message on the final onboarding step." },
+  "onboardingTutorialPromptQuestion": "Want to see a quick tour of the app?",
+  "@onboardingTutorialPromptQuestion": { "description": "Question in the post-completion tutorial-offer dialog." },
+  "onboardingTutorialPromptNote": "You can always run this tour again from settings.",
+  "@onboardingTutorialPromptNote": { "description": "Smaller reassurance note under the tutorial-offer question." },
+  "onboardingTutorialShowButton": "Show tutorial",
+  "@onboardingTutorialShowButton": { "description": "Accepts the quick tour offer." },
+  "onboardingTutorialSkipButton": "Not now",
+  "@onboardingTutorialSkipButton": { "description": "Declines the quick tour offer." }
 }

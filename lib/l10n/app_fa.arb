@@ -3,5 +3,63 @@
   "appTitle": "اوپن‌ترانسپورت",
   "stationListTitle": "ایستگاه‌ها",
   "interchangeCount": "{count, plural, =1{۱ خط} other{{count} خط}}",
-  "loadError": "بارگذاری اطلاعات حمل‌ونقل ممکن نشد."
+  "loadError": "بارگذاری اطلاعات حمل‌ونقل ممکن نشد.",
+  "homeMetroTitle": "مترو",
+  "homeMetroSubtitle": "خطوط و ایستگاه‌ها",
+  "homeBrtTitle": "BRT",
+  "homeBrtComingSoon": "به‌زودی",
+  "homeSmartTitle": "همگانی",
+  "homeSmartSubtitle": "ساده‌ترین راه به هر مقصد یا ایستگاه",
+  "placeholderComingSoonMessage": "این بخش به‌زودی اضافه می‌شود.",
+
+  "commonConfirm": "تأیید",
+  "commonCancel": "انصراف",
+  "commonSkipAll": "رد کردن همه",
+
+  "onboardingStepIndicator": "مرحله {step} از {total}",
+  "@onboardingStepIndicator": {
+    "placeholders": {
+      "step": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "onboardingSkipConfirmMessage": "اگه رد کنی، مشکلی برات پیش نمیاد و می‌تونی از نقشه‌ها استفاده کنی. ولی بدون حساب کاربری نمی‌تونی: مسیرهای موردعلاقه‌تو ذخیره کنی، تنظیماتت بین گوشی‌هات هماهنگ بشه، یا داده‌ی جدید به جامعه اضافه کنی.",
+  "onboardingWithoutAccountTitle": "بدون حساب کاربری",
+  "onboardingWithoutAccountIntro": "بدون حساب کاربری نمی‌تونی:",
+  "onboardingWithoutAccountBulletSaveRoutes": "مسیرهای موردعلاقه‌تو ذخیره کنی",
+  "onboardingWithoutAccountBulletSyncSettings": "تنظیماتت بین گوشی‌هات هماهنگ بشه",
+  "onboardingWithoutAccountBulletContribute": "داده‌ی جدید به جامعه اضافه کنی",
+  "onboardingWithoutAccountDismiss": "متوجه شدم",
+
+  "onboardingContinueButton": "ادامه",
+  "onboardingAutocompleteNoMatches": "نتیجه‌ای یافت نشد",
+
+  "onboardingCountryLanguageStepTitle": "کشور و زبان",
+  "onboardingCountryFieldLabel": "کشور",
+  "onboardingLanguageFieldLabel": "زبان",
+
+  "onboardingProfileStepTitle": "کمی درباره خودت بگو",
+  "onboardingProfileStepSubtitle": "نام و نام خانوادگی اختیاری‌اند",
+  "onboardingUsernameLabel": "نام کاربری",
+  "onboardingUsernameFormatHint": "فقط حروف انگلیسی، عدد و _، بین ۳ تا ۲۰ کاراکتر",
+  "onboardingUsernameTaken": "این نام کاربری قبلاً گرفته شده",
+  "onboardingFirstNameLabel": "نام",
+  "onboardingLastNameLabel": "نام خانوادگی",
+  "onboardingNamePlausibilityHint": "بهتره حداقل یک حرف داشته باشه",
+
+  "onboardingPasswordStepTitle": "رمز عبور",
+  "onboardingPasswordLabel": "رمز عبور",
+  "onboardingPasswordMinLengthNote": "بهتره حداقل ۸ کاراکتر باشه",
+  "onboardingPasswordStrengthWeak": "ضعیف",
+  "onboardingPasswordStrengthGood": "خوب",
+  "onboardingPasswordStrengthStrong": "قوی",
+  "onboardingPasswordSuggestUppercase": "بهتره یک حرف بزرگ هم داشته باشه",
+  "onboardingPasswordSuggestNumber": "بهتره یک عدد هم داشته باشه",
+  "onboardingPasswordSuggestSpecialChar": "بهتره یک نماد ویژه هم داشته باشه (مثل !@#$)",
+
+  "onboardingCompletionMessage": "🎉 خوش اومدی! حسابت ساخته شد.",
+  "onboardingTutorialPromptQuestion": "می‌خوای یه آموزش سریع از برنامه ببینی؟",
+  "onboardingTutorialPromptNote": "همیشه می‌تونی این آموزش رو از تنظیمات دوباره اجرا کنی.",
+  "onboardingTutorialShowButton": "دیدن آموزش",
+  "onboardingTutorialSkipButton": "فعلا نه"
 }

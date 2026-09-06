@@ -121,6 +121,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t load transit data.'**
   String get loadError;
+
+  /// Home screen option: browse metro lines and stations.
+  ///
+  /// In en, this message translates to:
+  /// **'Metro'**
+  String get homeMetroTitle;
+
+  /// Subtitle for the Metro option on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Lines & stations'**
+  String get homeMetroSubtitle;
+
+  /// Home screen option: Bus Rapid Transit. Kept as the acronym in every language.
+  ///
+  /// In en, this message translates to:
+  /// **'BRT'**
+  String get homeBrtTitle;
+
+  /// Badge shown on the BRT option, which isn't fully built yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get homeBrtComingSoon;
+
+  /// Home screen option: find the easiest way to a destination or station, across all transport types.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart'**
+  String get homeSmartTitle;
+
+  /// Subtitle explaining the Smart option on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'The easiest way to any destination or station'**
+  String get homeSmartSubtitle;
+
+  /// Body text on a placeholder screen for a feature that isn't built yet.
+  ///
+  /// In en, this message translates to:
+  /// **'This section is coming soon.'**
+  String get placeholderComingSoonMessage;
+
+  /// Generic confirmation button label in a dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get commonConfirm;
+
+  /// Generic cancel button label in a dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get commonCancel;
+
+  /// De-emphasized action to abandon a multi-step flow entirely.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip all'**
+  String get commonSkipAll;
+
+  /// Accessibility label for the onboarding progress bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String onboardingStepIndicator(int step, int total);
+
+  /// Confirmation dialog shown when tapping 'Skip all' during onboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'If you skip, that\'s totally fine — you can still use the maps. But without an account you won\'t be able to: save your favorite routes, sync your settings across your devices, or contribute new data to the community.'**
+  String get onboardingSkipConfirmMessage;
+
+  /// Title of the one-time dialog shown after skipping onboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Without an account'**
+  String get onboardingWithoutAccountTitle;
+
+  /// Lead-in line before the bullet list in the post-skip notice dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Without an account, you won\'t be able to:'**
+  String get onboardingWithoutAccountIntro;
+
+  /// Bullet point in the post-skip notice dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your favorite routes'**
+  String get onboardingWithoutAccountBulletSaveRoutes;
+
+  /// Bullet point in the post-skip notice dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync your settings across your devices'**
+  String get onboardingWithoutAccountBulletSyncSettings;
+
+  /// Bullet point in the post-skip notice dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Add new data to the community'**
+  String get onboardingWithoutAccountBulletContribute;
+
+  /// Dismiss button on the post-skip notice dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get onboardingWithoutAccountDismiss;
+
+  /// The single, full-width primary action at the bottom of every onboarding step.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get onboardingContinueButton;
+
+  /// Shown in a step-1 dropdown (country or language) when the typed text matches nothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches found'**
+  String get onboardingAutocompleteNoMatches;
+
+  /// Title of onboarding step 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Country & language'**
+  String get onboardingCountryLanguageStepTitle;
+
+  /// Floating label on the country autocomplete field.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get onboardingCountryFieldLabel;
+
+  /// Floating label on the language autocomplete field.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get onboardingLanguageFieldLabel;
+
+  /// Title of onboarding step 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about yourself'**
+  String get onboardingProfileStepTitle;
+
+  /// Subtitle on step 2 — username is required, first/last name are not.
+  ///
+  /// In en, this message translates to:
+  /// **'First and last name are optional'**
+  String get onboardingProfileStepSubtitle;
+
+  /// Username field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get onboardingUsernameLabel;
+
+  /// Helper/format-error text under the username field.
+  ///
+  /// In en, this message translates to:
+  /// **'English letters, digits, and _ only, 3–20 characters'**
+  String get onboardingUsernameFormatHint;
+
+  /// Shown after the duplicate check finds the username is taken.
+  ///
+  /// In en, this message translates to:
+  /// **'This username is already taken'**
+  String get onboardingUsernameTaken;
+
+  /// Optional first name field label.
+  ///
+  /// In en, this message translates to:
+  /// **'First name'**
+  String get onboardingFirstNameLabel;
+
+  /// Optional last name field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Last name'**
+  String get onboardingLastNameLabel;
+
+  /// Gentle, non-blocking hint for a first/last name that's all digits/symbols.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s better if it has at least one letter'**
+  String get onboardingNamePlausibilityHint;
+
+  /// Title of onboarding step 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get onboardingPasswordStepTitle;
+
+  /// Password field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get onboardingPasswordLabel;
+
+  /// Neutral-toned note shown below 8 characters — the only hard requirement, phrased gently anyway.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s better if it\'s at least 8 characters'**
+  String get onboardingPasswordMinLengthNote;
+
+  /// Strength-meter label: 0-1 extra criteria met.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get onboardingPasswordStrengthWeak;
+
+  /// Strength-meter label: 2 extra criteria met.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get onboardingPasswordStrengthGood;
+
+  /// Strength-meter label: 3 extra criteria met.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get onboardingPasswordStrengthStrong;
+
+  /// Non-blocking suggestion, not a requirement.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s better if it also has an uppercase letter'**
+  String get onboardingPasswordSuggestUppercase;
+
+  /// Non-blocking suggestion, not a requirement.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s better if it also has a number'**
+  String get onboardingPasswordSuggestNumber;
+
+  /// Non-blocking suggestion, not a requirement.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s better if it also has a special character (like !@#\$)'**
+  String get onboardingPasswordSuggestSpecialChar;
+
+  /// Celebratory message on the final onboarding step.
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Welcome! Your account is ready.'**
+  String get onboardingCompletionMessage;
+
+  /// Question in the post-completion tutorial-offer dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Want to see a quick tour of the app?'**
+  String get onboardingTutorialPromptQuestion;
+
+  /// Smaller reassurance note under the tutorial-offer question.
+  ///
+  /// In en, this message translates to:
+  /// **'You can always run this tour again from settings.'**
+  String get onboardingTutorialPromptNote;
+
+  /// Accepts the quick tour offer.
+  ///
+  /// In en, this message translates to:
+  /// **'Show tutorial'**
+  String get onboardingTutorialShowButton;
+
+  /// Declines the quick tour offer.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get onboardingTutorialSkipButton;
 }
 
 class _AppLocalizationsDelegate
