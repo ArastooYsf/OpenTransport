@@ -1,0 +1,51 @@
+name: New or incorrect transit data
+description: A city/line/station is missing, wrong, or outdated. No coding needed — just tell us what you know.
+title: "[Data]: "
+labels: ["data", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You don't need to know how to code to help here — if you know a
+        transit system, or spotted something wrong, this is all we need.
+        If you're comfortable with JSON and git, you can also just open a
+        pull request directly — see
+        [CONTRIBUTING.md](https://github.com/ArastooYsf/OpenTransport/blob/main/CONTRIBUTING.md#contributing-transit-data-no-coding-required).
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of report is this?
+      options:
+        - A whole city/system is missing
+        - A line is missing or wrong (color, name, stations)
+        - A station is missing or wrong (name, location, accessibility)
+        - Schedule/timetable info is missing or wrong
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Country and city
+      placeholder: e.g. Iran, Tehran
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Line names/colors, station names (local language + any transliteration you know), coordinates if you have them, what's currently wrong, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: Where does this information come from? An official GTFS feed, the transit authority's website/map, OpenStreetMap, or your own knowledge of the system. Links are extremely helpful — see the `meta.source` field in schema.json for why this matters.
+      placeholder: e.g. https://example-metro-authority.gov/map, or "I ride this line daily"
+    validations:
+      required: true

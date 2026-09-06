@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 /// App-wide theme, built from design.md's principles.
 ///
-/// design.md leaves the exact brand accent color and multi-script font
-/// family as open questions (see "Open questions to revisit"). Until those
-/// are decided, this uses Material 3's seed-color system as a neutral
-/// placeholder rather than inventing a specific hex value — swap
-/// [_placeholderSeed] once an accent color is chosen.
+/// The brand accent (`#0891B2`) is design.md's chosen "App neutral palette"
+/// color — see its Color system section. design.md still leaves the
+/// multi-script font family as an open question, so typography uses the
+/// Material 3 default until that's decided.
 abstract final class AppTheme {
-  static const _placeholderSeed = Colors.indigo;
+  static const _accentSeed = Color(0xFF0891B2);
 
   static ThemeData light() => _themeFrom(Brightness.light);
 
@@ -19,7 +18,7 @@ abstract final class AppTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: _placeholderSeed,
+        seedColor: _accentSeed,
         brightness: brightness,
       ),
       // Modern and light: flat surfaces, no heavy shadows (design.md).

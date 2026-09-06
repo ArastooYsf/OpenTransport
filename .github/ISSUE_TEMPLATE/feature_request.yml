@@ -1,0 +1,44 @@
+name: Feature request
+description: Suggest an idea, improvement, or a new capability for the app.
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Big changes (a new screen, a new transport mode, routing/map work,
+        voice assistant integration) are usually worth discussing first —
+        consider opening a
+        [Discussion](https://github.com/ArastooYsf/OpenTransport/discussions)
+        before filing a full proposal here.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What's missing or awkward today? Who does it affect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What would you like to see happen? Sketches, mockups, or references to similar apps are welcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues/discussions and this hasn't been suggested already.
+          required: true

@@ -11,6 +11,7 @@ Visual and interaction rules for the app. Every UI decision should be traceable 
 ## Color system
 
 - **App neutral palette:** one consistent brand accent color for buttons, active states, and non-map UI (defined once, not per-line). Use a single accent — don't let it compete with line colors.
+  - **Chosen accent:** `#0891B2` (a vivid teal-blue/azure). Used for: primary buttons, active nav states, the splash-screen loading bar, focus rings. Pair with a slightly lighter tint (`#22B8D4`-ish) for hover/pressed states, and verify contrast against both light and dark backgrounds before finalizing shades.
 - **Line colors:** every metro line uses its real, official color from the transit authority (stored in the data file, not hardcoded). This means the palette is technically unbounded — the UI must be built to look correct with *any* line color, not just a curated set.
   - Always pair a line color with a computed readable text/icon color (white or near-black depending on the line color's luminance) — never assume white text works on every line color.
   - Line color badges/pills: fill = line color, text = whichever of white/near-black passes contrast against it.
@@ -44,6 +45,5 @@ Visual and interaction rules for the app. Every UI decision should be traceable 
 
 ## Open questions to revisit
 
-- Exact accent color for app-wide neutral brand (not yet chosen).
 - Specific multi-script font family selection.
 - Icon set for transport mode beyond metro (bus/tram) if scope expands later.
