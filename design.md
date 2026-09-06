@@ -10,19 +10,46 @@ Visual and interaction rules for the app. Every UI decision should be traceable 
 
 ## Color system
 
-- **App neutral accent:** `#0891B2` (vivid teal-blue/azure). Used for: primary buttons, active nav states, splash-screen loading bar, focus rings, selected/active icon states. Pair with a lighter tint (`#22B8D4`-ish) for hover/pressed states.
-- **Line colors:** every metro/transit line uses its real, official color from the transit authority (stored in the data file, not hardcoded). The UI must look correct with *any* line color, not just a curated set.
-  - Always pair a line color with a computed readable text/icon color (white or near-black depending on the line color's luminance).
-  - Line badges/pills: fill = line color, text = whichever of white/near-black passes contrast against it.
-- **Theme:** full light AND dark mode from day one, following the OS system setting by default, with a manual override available in app settings. Line colors stay the same in both modes (they're official/recognizable); surrounding surfaces, text, and shadow opacity invert/adjust.
-- **Semantic colors** (separate from line colors): success/warning/error/info use a fixed neutral set — used for things like "delay," "closed," "on time," password-strength states, validation feedback.
+Exact, final values — do not substitute similar-looking shades. This palette exists specifically to avoid colors reading as "too dark" or "too similar to each other."
+
+**Accent (both themes):**
+- `accentLight` (light theme primary): `#0891B2`
+- `accentDark` (dark theme primary — brightened for contrast on dark backgrounds): `#22D3EE`
+- `accentPressed`/hover tint: `#22B8D4` (light theme), `#67E8F9` (dark theme)
+
+**Light theme surfaces/text:**
+- `background`: `#F7FAFC`
+- `surface` (cards, fields): `#FFFFFF`
+- `surfaceElevated` (dialogs, dropdowns, sheets): `#FFFFFF` + shadow (see Elevation)
+- `border`: `#E2E8F0`
+- `textPrimary`: `#1A202C`
+- `textSecondary`: `#64748B`
+
+**Dark theme surfaces/text:**
+- `background`: `#0F172A`
+- `surface` (cards, fields): `#1E293B`
+- `surfaceElevated` (dialogs, dropdowns, sheets): `#28374D`
+- `border`: `#334155`
+- `textPrimary`: `#F1F5F9`
+- `textSecondary`: `#94A3B8`
+
+**Semantic colors (deliberately distinct hues from each other and from the accent — never reuse the accent hue for a semantic meaning):**
+- `success`: `#16A34A` (light) / `#22C55E` (dark)
+- `warning`: `#F59E0B` (light) / `#FBBF24` (dark)
+- `danger`: `#EF4444` (light) / `#F87171` (dark)
+- `info`: `#3B82F6` (light) / `#60A5FA` (dark) — note: intentionally a different hue family from the teal accent so "info" never gets confused with brand/accent elements.
+
+**Line colors:** every metro/transit line uses its real, official color from the transit authority (stored in the data file, not hardcoded). The UI must look correct with *any* line color.
+- Always pair a line color with a computed readable text/icon color (white or near-black depending on the line color's luminance).
+- Line badges/pills: fill = line color, text = whichever of white/near-black passes contrast against it.
+
+**Theme switching:** full light AND dark mode from day one, following the OS system setting by default, with a manual override in app settings. Line colors stay identical in both themes; only the tokens above change.
 
 ## Typography
 
-- **Persian/Arabic script:** Vazirmatn (a variable font — use Regular weight for body, Medium/SemiBold for emphasis and headings).
-- **Latin script:** Inter — a clean, modern grotesque that pairs naturally with Vazirmatn's geometric character and fits the Material-inspired direction.
-- Bundle both as local assets (`assets/fonts/`), never a runtime font-fetch — this app is offline-first, and type is no exception.
-- As more countries/scripts get added, pick each new script's pairing for the same geometric/modern character Vazirmatn + Inter establish — don't let a mismatched font (e.g. an ornate serif) break the visual consistency.
+- **Persian/Arabic script:** Shabnam FD (all weights available — use Regular for body, Medium/Bold for emphasis and headings).
+- **Latin script:** Rubik — a geometric, rounded-leaning sans-serif that stylistically pairs well with Shabnam FD's clean/modern character and fits the Material-inspired direction (Inter is an acceptable fallback if Rubik's language coverage is ever insufficient for a specific added country).
+- As more countries/scripts get added, pick each new script's pairing for the same geometric/modern character Shabnam FD + Rubik establish — don't let a mismatched font (e.g. an ornate serif) break the visual consistency.
 - Type scale: keep it small — a heading size, a body size, a caption size, one weight for emphasis. Avoid introducing more than 3–4 sizes total; this is a utility app, not an editorial one.
 - Numerals (arrival times, line numbers): decide once whether to always show Western digits or locale-appropriate digits, and apply that rule everywhere consistently — mixed digit styles in the same screen look broken.
 

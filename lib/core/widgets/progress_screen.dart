@@ -96,7 +96,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   width: double.infinity,
                   child: LinearProgressIndicator(
                     value: widget.progress,
-                    color: AppTheme.accent,
+                    color: context.colors.accent,
                     backgroundColor: scheme.surfaceContainerHighest,
                   ),
                 ),

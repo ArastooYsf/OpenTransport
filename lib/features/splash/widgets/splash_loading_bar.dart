@@ -16,14 +16,15 @@ class SplashLoadingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = context.colors.accent;
     return SizedBox(
       width: width,
       height: 4,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(999),
         child: LinearProgressIndicator(
-          color: AppTheme.accent,
-          backgroundColor: AppTheme.accent.withValues(alpha: 0.15),
+          color: accent,
+          backgroundColor: accent.withValues(alpha: 0.15),
         ),
       ),
     );

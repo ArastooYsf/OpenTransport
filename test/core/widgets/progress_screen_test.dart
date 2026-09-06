@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:open_transport/core/theme/app_theme.dart';
 import 'package:open_transport/core/widgets/progress_screen.dart';
 
 void main() {
@@ -20,7 +21,10 @@ void main() {
     const messages = ['Short', 'A somewhat longer welcome message'];
 
     await tester.pumpWidget(
-      const MaterialApp(home: ProgressScreen(messages: messages)),
+      MaterialApp(
+        theme: AppTheme.light(const Locale('en')),
+        home: const ProgressScreen(messages: messages),
+      ),
     );
 
     expect(find.text(messages[0]), findsOneWidget);
@@ -48,7 +52,10 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      const MaterialApp(home: ProgressScreen(messages: [])),
+      MaterialApp(
+        theme: AppTheme.light(const Locale('en')),
+        home: const ProgressScreen(messages: []),
+      ),
     );
 
     expect(find.byType(LinearProgressIndicator), findsOneWidget);

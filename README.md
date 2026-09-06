@@ -421,12 +421,12 @@ the license/terms of the specific source cited for that file.
   mirrors it.
 - [Flutter](https://flutter.dev) and [Riverpod](https://riverpod.dev)
   documentation.
-- [Vazirmatn](https://github.com/rastikerdar/vazirmatn) and
-  [Inter](https://rsms.me/inter/) — the app's Persian/Arabic and Latin
-  typefaces (see `design.md`'s Typography section), both bundled under
-  `assets/fonts/` and licensed under the
+- [Shabnam FD](https://github.com/rastikerdar/shabnam-font) and
+  [Rubik](https://fonts.google.com/specimen/Rubik) — the app's Persian/Arabic
+  and Latin typefaces (see `design.md`'s Typography section), both bundled
+  under `assets/fonts/` and licensed under the
   [SIL Open Font License](https://openfontlicense.org) (see the
-  `VAZIRMATN_OFL.txt` / `INTER_OFL.txt` files there).
+  `SHABNAMFD_LICENSE.md` / `RUBIK_OFL.txt` files there).
 - Every transit authority that publishes an open GTFS feed or open data
   portal — official sources are always preferred; see
   [Contributing transit data](CONTRIBUTING.md#contributing-transit-data-no-coding-required).

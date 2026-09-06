@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:open_transport/core/theme/app_theme.dart';
 import 'package:open_transport/features/onboarding/providers/onboarding_providers.dart';
 import 'package:open_transport/features/onboarding/screens/onboarding_flow_screen.dart';
 import 'package:open_transport/l10n/generated/app_localizations.dart';
@@ -9,6 +10,7 @@ Widget _appUnderTest(ProviderContainer container) {
   return UncontrolledProviderScope(
     container: container,
     child: MaterialApp(
+      theme: AppTheme.light(const Locale('en')),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: const OnboardingFlowScreen(),
@@ -86,13 +88,17 @@ void main() {
     // --- Completion ---
     expect(find.textContaining('Welcome'), findsOneWidget);
 
-    // The completion step shows the tutorial dialog ~600ms after landing;
-    // dismiss it so nothing (Timer or route) is left pending at test end.
-    await tester.pump(const Duration(milliseconds: 600));
+    // Tapping Continue here (through its own glow-sweep) hands off to Home
+    // — the tutorial dialog does *not* appear on this screen anymore.
+    await _tapContinue(tester);
+    expect(find.text('Want to see a quick tour of the app?'), findsNothing);
+
+    // Home registers first; only ~700ms later does the tutorial dialog
+    // fade/scale in on top of it. Dismiss it so nothing is left pending.
+    await tester.pump(const Duration(milliseconds: 750));
     expect(find.text('Want to see a quick tour of the app?'), findsOneWidget);
     await tester.tap(find.text('Not now'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
   });
 
   testWidgets('skip all -> confirm shows the post-skip notice on Home', (

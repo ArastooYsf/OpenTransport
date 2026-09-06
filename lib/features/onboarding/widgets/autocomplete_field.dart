@@ -86,14 +86,10 @@ class _AutocompleteFieldState<T extends Object>
         return TextField(
           controller: controller,
           focusNode: focusNode,
-          decoration: InputDecoration(
-            labelText: widget.label,
-            filled: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide.none,
-            ),
-          ),
+          // Fill color, border radius, and border color all come from the
+          // app-wide InputDecorationTheme (see AppTheme) — every field
+          // shares one definition rather than repeating it per widget.
+          decoration: InputDecoration(labelText: widget.label),
         );
       },
       optionsViewBuilder: (context, onSelected, optionsIterable) {

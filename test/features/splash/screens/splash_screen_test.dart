@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:open_transport/core/theme/app_theme.dart';
 import 'package:open_transport/features/onboarding/screens/greeting_screen.dart';
 import 'package:open_transport/features/splash/screens/splash_screen.dart';
 import 'package:open_transport/features/splash/widgets/pulsing_logo.dart';
@@ -11,6 +12,7 @@ import 'package:open_transport/l10n/generated/app_localizations.dart';
 Widget _appUnderTest() {
   return ProviderScope(
     child: MaterialApp(
+      theme: AppTheme.light(const Locale('en')),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: const SplashScreen(),

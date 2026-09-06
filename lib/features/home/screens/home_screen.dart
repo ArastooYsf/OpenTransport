@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/widgets/placeholder_screen.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../onboarding/dialogs/tutorial_prompt_dialog.dart';
 import '../../onboarding/dialogs/without_account_notice_dialog.dart';
 import '../widgets/option_card.dart';
 
@@ -9,23 +10,38 @@ import '../widgets/option_card.dart';
 /// to get around — never tied to a specific line color (see design.md,
 /// "Map-first" and the color system's line-vs-brand separation).
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, this.showWithoutAccountNotice = false});
+  const HomeScreen({
+    super.key,
+    this.showWithoutAccountNotice = false,
+    this.showTutorialPrompt = false,
+  });
 
   /// Shows the one-time "here's what you're missing" dialog right after
   /// arriving here from onboarding's "skip all" path.
   final bool showWithoutAccountNotice;
+
+  /// Shows the "want a quick tour?" dialog a beat after arriving here from
+  /// a completed (non-skipped) onboarding — deliberately delayed so this
+  /// screen registers first before the dialog appears on top of it.
+  final bool showTutorialPrompt;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static const _tutorialPromptDelay = Duration(milliseconds: 700);
+
   @override
   void initState() {
     super.initState();
     if (widget.showWithoutAccountNotice) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) showWithoutAccountNoticeDialog(context);
+      });
+    } else if (widget.showTutorialPrompt) {
+      Future.delayed(_tutorialPromptDelay, () {
+        if (mounted) showTutorialPromptDialog(context);
       });
     }
   }

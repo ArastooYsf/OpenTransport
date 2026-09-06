@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/app_theme.dart' show AppColorsX;
 
 /// The big, full-width "Continue" button pinned at the bottom of each
 /// onboarding step.
@@ -70,7 +70,7 @@ class _ContinueButtonState extends State<ContinueButton>
                     progress: Curves.easeInOut.transform(
                       _sweepController.value,
                     ),
-                    color: AppTheme.accent,
+                    color: context.colors.accent,
                     borderRadius: _borderRadius,
                   )
                 : null,

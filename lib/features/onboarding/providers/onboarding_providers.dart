@@ -109,15 +109,20 @@ double stepFillFraction(OnboardingState state, int stepIndex) {
   }
 }
 
-/// Overall 0.0–1.0 progress across the whole stepper, blending completed
-/// steps with the current step's partial fill.
-double overallStepperProgress(OnboardingState state) {
+/// How filled the connecting-line segment between circle [segmentIndex] and
+/// circle `segmentIndex + 1` should be, as a 0.0–1.0 fraction of that one
+/// segment (not the whole line — each step owns its own segment):
+/// fully filled for a step already passed, empty for one not reached yet,
+/// and — for the segment belonging to the current step — exactly
+/// [stepFillFraction], so it fills in place as the user fills in fields,
+/// not in one jump when the step changes.
+double segmentFillFraction(OnboardingState state, int segmentIndex) {
   final currentIndex = OnboardingStep.values.indexOf(state.step);
-  if (currentIndex >= stepperStepCount) return 1;
-  final completedFraction = currentIndex / stepperStepCount;
-  final currentContribution =
-      stepFillFraction(state, currentIndex) / stepperStepCount;
-  return (completedFraction + currentContribution).clamp(0, 1);
+  if (segmentIndex < currentIndex) return 1;
+  if (segmentIndex == currentIndex) {
+    return stepFillFraction(state, segmentIndex);
+  }
+  return 0;
 }
 
 enum StepCircleState { upcoming, current, completed, skippedIncomplete }

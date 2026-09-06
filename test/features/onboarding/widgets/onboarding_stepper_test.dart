@@ -1,48 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:open_transport/core/theme/app_theme.dart';
 import 'package:open_transport/features/onboarding/providers/onboarding_providers.dart';
 import 'package:open_transport/features/onboarding/widgets/onboarding_stepper.dart';
+import 'package:open_transport/l10n/generated/app_localizations.dart';
 
-Widget _harness(double progress) {
-  return MaterialApp(
-    home: Scaffold(
-      body: OnboardingStepper(
-        stepIndex: 1,
-        stepCount: 3,
-        progress: progress,
-        circleStateAt: (index) => StepCircleState.upcoming,
-        stepLabel: 'Step 2 of 3',
-      ),
+Widget _harness(ProviderContainer container) {
+  return UncontrolledProviderScope(
+    container: container,
+    child: MaterialApp(
+      theme: AppTheme.light(const Locale('en')),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: const Scaffold(body: OnboardingStepper(stepCount: 3)),
     ),
   );
 }
 
-double _lineWidthFactor(WidgetTester tester) {
+/// The two connecting-line segments' current animated widths, in tree
+/// order (segment 0 between circles 0–1, segment 1 between circles 1–2) —
+/// found by height, since each circle is also an [AnimatedContainer] but a
+/// fixed 32x32, distinct from a segment's 3px-tall bar.
+List<double> _segmentWidths(WidgetTester tester) {
   return tester
-      .widget<FractionallySizedBox>(find.byType(FractionallySizedBox))
-      .widthFactor!;
+      .widgetList<AnimatedContainer>(find.byType(AnimatedContainer))
+      .where((container) => container.constraints?.maxHeight == 3)
+      .map((container) => container.constraints!.maxWidth)
+      .toList();
 }
 
 void main() {
   testWidgets(
-    "the connecting line's fill tracks a fractional progress value — i.e. "
-    "actual field completion within a step, not a full per-step jump",
+    "each connecting-line segment fills from live field-validity state via "
+    "Riverpod, not just the step index — the current step's segment fills "
+    'field-by-field, not in one jump',
     (tester) async {
-      await tester.pumpWidget(_harness(0));
-      await tester.pump(const Duration(milliseconds: 400));
-      expect(_lineWidthFactor(tester), 0);
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final notifier = container.read(onboardingProvider.notifier);
 
-      // A value that lands strictly between two per-step boundaries (1/3
-      // and 2/3) — the shape `overallStepperProgress` produces when the
-      // current step is partially, not fully, filled in.
-      const partialProgress = 1 / 3 + (1 / 3) / 3;
-      await tester.pumpWidget(_harness(partialProgress));
+      await tester.pumpWidget(_harness(container));
       await tester.pump(const Duration(milliseconds: 400));
-      expect(_lineWidthFactor(tester), closeTo(partialProgress, 0.01));
 
-      await tester.pumpWidget(_harness(2 / 3));
+      // Still on step 0 (country/language), nothing filled: both segments
+      // are empty.
+      var widths = _segmentWidths(tester);
+      expect(widths[0], 0);
+      expect(widths[1], 0);
+
+      // Jump to the profile step without filling step 0 — its segment
+      // reads as fully passed regardless of step 0's own fields, and the
+      // profile step's own segment starts empty.
+      notifier.selectCountry('iran');
+      notifier.next();
       await tester.pump(const Duration(milliseconds: 400));
-      expect(_lineWidthFactor(tester), closeTo(2 / 3, 0.01));
+      widths = _segmentWidths(tester);
+      expect(widths[0], greaterThan(0));
+      final fullSegmentWidth = widths[0];
+      expect(widths[1], 0);
+
+      // Filling the profile step's three fields one at a time fills its
+      // segment in place, proportionally to how many are valid so far.
+      notifier.updateProfile(username: 'arastoo1');
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(_segmentWidths(tester)[1], closeTo(fullSegmentWidth / 3, 1));
+
+      notifier.updateProfile(firstName: 'Arastoo');
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(_segmentWidths(tester)[1], closeTo(fullSegmentWidth * 2 / 3, 1));
+
+      notifier.updateProfile(lastName: 'Yousefi');
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(_segmentWidths(tester)[1], closeTo(fullSegmentWidth, 1));
     },
   );
 }

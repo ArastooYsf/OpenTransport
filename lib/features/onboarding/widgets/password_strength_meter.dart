@@ -21,21 +21,22 @@ class PasswordStrengthMeter extends StatelessWidget {
 
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
+    final colors = context.colors;
     final score = passwordExtraCriteriaScore(password);
     final strength = passwordStrengthFor(password);
     final filledSegments = score + 1;
 
     final (color, label) = switch (strength) {
       PasswordStrength.weak => (
-        scheme.error,
+        colors.danger,
         l10n.onboardingPasswordStrengthWeak,
       ),
       PasswordStrength.good => (
-        AppTheme.warning,
+        colors.warning,
         l10n.onboardingPasswordStrengthGood,
       ),
       PasswordStrength.strong => (
-        AppTheme.success,
+        colors.success,
         l10n.onboardingPasswordStrengthStrong,
       ),
     };

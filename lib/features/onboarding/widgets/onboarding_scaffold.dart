@@ -7,20 +7,18 @@ import '../providers/onboarding_providers.dart';
 /// Shared chrome for every onboarding screen: the "Skip all" action and,
 /// while [stepIndex] is within the stepper (see [stepperStepCount]), the
 /// "STEP X/3" header — hidden on the final completion screen, which isn't
-/// part of the numbered stepper.
+/// part of the numbered stepper. [OnboardingStepper] reads step/field state
+/// from Riverpod directly, so this scaffold only needs to know whether to
+/// show it.
 class OnboardingScaffold extends StatelessWidget {
   const OnboardingScaffold({
     super.key,
     required this.stepIndex,
-    required this.progress,
-    required this.circleStateAt,
     required this.onSkipAll,
     required this.child,
   });
 
   final int stepIndex;
-  final double progress;
-  final StepCircleState Function(int circleIndex) circleStateAt;
   final VoidCallback onSkipAll;
   final Widget child;
 
@@ -46,16 +44,7 @@ class OnboardingScaffold extends StatelessWidget {
               ),
               if (showStepper) ...[
                 const SizedBox(height: 4),
-                OnboardingStepper(
-                  stepIndex: stepIndex,
-                  stepCount: stepperStepCount,
-                  progress: progress,
-                  circleStateAt: circleStateAt,
-                  stepLabel: l10n.onboardingStepIndicator(
-                    stepIndex + 1,
-                    stepperStepCount,
-                  ),
-                ),
+                const OnboardingStepper(stepCount: stepperStepCount),
                 const SizedBox(height: 24),
               ],
               Expanded(child: child),

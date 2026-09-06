@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/contrast_color.dart';
+import '../../../l10n/generated/app_localizations.dart';
+import '../models/onboarding_state.dart';
 import '../providers/onboarding_providers.dart';
 
-/// The persistent "STEP X/3" header: a horizontal connecting line whose
-/// fill tracks actual field-completion progress (not just a per-step
-/// jump), with a circle per step showing one of four states.
-class OnboardingStepper extends StatelessWidget {
-  const OnboardingStepper({
-    super.key,
-    required this.stepIndex,
-    required this.stepCount,
-    required this.progress,
-    required this.circleStateAt,
-    required this.stepLabel,
-  });
+/// The persistent "STEP X/3" header. Reads [onboardingProvider] directly
+/// (rather than taking a pre-computed progress value) so every segment's
+/// fill is always freshly derived from live field-validity state — any
+/// field's `onChanged` that updates the provider rebuilds this straight
+/// from [segmentFillFraction]/[stepCircleStateFor], never a value that was
+/// only set once per step.
+class OnboardingStepper extends ConsumerWidget {
+  const OnboardingStepper({super.key, required this.stepCount});
 
-  final int stepIndex;
   final int stepCount;
 
-  /// 0.0–1.0 overall completion, animated smoothly as it changes.
-  final double progress;
-  final StepCircleState Function(int circleIndex) circleStateAt;
-  final String stepLabel;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final state = ref.watch(onboardingProvider);
+    final currentIndex = OnboardingStep.values.indexOf(state.step);
+
     return Column(
       children: [
         Text(
-          stepLabel,
+          l10n.onboardingStepIndicator(currentIndex + 1, stepCount),
           style: Theme.of(
             context,
           ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -38,27 +35,19 @@ class OnboardingStepper extends StatelessWidget {
         const SizedBox(height: 16),
         SizedBox(
           height: 40,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  PositionedDirectional(
-                    top: 19,
-                    start: 20,
-                    end: 20,
-                    child: _ConnectingLine(progress: progress),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              for (var i = 0; i < stepCount; i++) ...[
+                _StepCircle(state: stepCircleStateFor(state, i)),
+                if (i != stepCount - 1)
+                  Expanded(
+                    child: _StepSegment(
+                      fillFraction: segmentFillFraction(state, i),
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      for (var i = 0; i < stepCount; i++)
-                        _StepCircle(state: circleStateAt(i)),
-                    ],
-                  ),
-                ],
-              );
-            },
+              ],
+            ],
           ),
         ),
       ],
@@ -66,35 +55,42 @@ class OnboardingStepper extends StatelessWidget {
   }
 }
 
-class _ConnectingLine extends StatelessWidget {
-  const _ConnectingLine({required this.progress});
+/// One connecting-line segment: a background layer (full width, [border]
+/// token, static) and a foreground layer (an [AnimatedContainer], [accent]
+/// token) whose width tracks [fillFraction] — the fraction of *this one
+/// segment*, not the whole line.
+class _StepSegment extends StatelessWidget {
+  const _StepSegment({required this.fillFraction});
 
-  final double progress;
+  final double fillFraction;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(999),
-      child: SizedBox(
-        height: 3,
-        child: Stack(
-          children: [
-            ColoredBox(color: scheme.surfaceContainerHighest),
-            TweenAnimationBuilder<double>(
-              tween: Tween<double>(begin: 0, end: progress),
-              duration: const Duration(milliseconds: 350),
-              curve: Curves.easeOut,
-              builder: (context, value, child) {
-                return FractionallySizedBox(
-                  alignment: AlignmentDirectional.centerStart,
-                  widthFactor: value.clamp(0, 1),
-                  child: ColoredBox(color: AppTheme.accent),
-                );
-              },
-            ),
-          ],
-        ),
+    final colors = context.colors;
+    return SizedBox(
+      height: 3,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
+            alignment: AlignmentDirectional.centerStart,
+            children: [
+              // Background layer: full-width line, fixed.
+              Container(
+                width: constraints.maxWidth,
+                height: 3,
+                color: colors.border,
+              ),
+              // Foreground layer: animates to the live per-field fraction.
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+                width: constraints.maxWidth * fillFraction.clamp(0.0, 1.0),
+                height: 3,
+                color: colors.accent,
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -107,7 +103,7 @@ class _StepCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final colors = context.colors;
 
     final (
       Color background,
@@ -116,26 +112,26 @@ class _StepCircle extends StatelessWidget {
       double scale,
     ) = switch (state) {
       StepCircleState.upcoming => (
-        scheme.surfaceContainerHighest,
-        scheme.outline,
+        colors.border,
+        colors.textSecondary,
         Icons.radio_button_unchecked_rounded,
         1.0,
       ),
       StepCircleState.current => (
-        AppTheme.accent,
-        readableTextColorFor(AppTheme.accent),
+        colors.accent,
+        readableTextColorFor(colors.accent),
         Icons.edit_rounded,
         1.15,
       ),
       StepCircleState.completed => (
-        AppTheme.success,
-        readableTextColorFor(AppTheme.success),
+        colors.success,
+        readableTextColorFor(colors.success),
         Icons.check_rounded,
         1.0,
       ),
       StepCircleState.skippedIncomplete => (
-        AppTheme.warning,
-        readableTextColorFor(AppTheme.warning),
+        colors.warning,
+        readableTextColorFor(colors.warning),
         Icons.warning_rounded,
         1.0,
       ),

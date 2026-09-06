@@ -36,10 +36,16 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
     ref.read(onboardingProvider.notifier).back();
   }
 
-  void _goHome({bool showWithoutAccountNotice = false}) {
+  void _goHome({
+    bool showWithoutAccountNotice = false,
+    bool showTutorialPrompt = false,
+  }) {
     Navigator.of(context).pushReplacement(
       fadeScalePageRoute(
-        HomeScreen(showWithoutAccountNotice: showWithoutAccountNotice),
+        HomeScreen(
+          showWithoutAccountNotice: showWithoutAccountNotice,
+          showTutorialPrompt: showTutorialPrompt,
+        ),
       ),
     );
   }
@@ -59,8 +65,6 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
 
     return OnboardingScaffold(
       stepIndex: stepIndex,
-      progress: overallStepperProgress(state),
-      circleStateAt: (circleIndex) => stepCircleStateFor(state, circleIndex),
       onSkipAll: _handleSkipAll,
       child: OnboardingStepTransition(
         isForward: _isForward,
@@ -78,7 +82,9 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
       case OnboardingStep.password:
         return PasswordStep(onNext: _goNext, onBack: _goBack);
       case OnboardingStep.completion:
-        return CompletionStep(onFinished: () => _goHome());
+        return CompletionStep(
+          onFinished: () => _goHome(showTutorialPrompt: true),
+        );
     }
   }
 }

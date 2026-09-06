@@ -1,4 +1,5 @@
-Copyright 2015 The Vazirmatn Project Authors (https://github.com/rastikerdar/vazirmatn)
+Copyright (c) 2015, Saber Rastikerdar (saber.rastikerdar@gmail.com),
+Glyphs and data from Roboto font are licensed under the Apache License, Version 2.0.
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

@@ -48,6 +48,10 @@ dependencies:
   # Renders the logo SVG on the splash/home screens.
   flutter_svg: ^2.3.0
 
+  # The completion screen's one-off confetti burst — a pure-Dart particle
+  # effect, no network calls at runtime, so it doesn't touch offline-first.
+  confetti: ^0.8.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -87,14 +91,21 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
 
-  # design.md's script pairing: Vazirmatn for Persian/Arabic script, Inter
-  # for Latin. Both are variable fonts (a single file covers the whole
-  # weight axis), and both are bundled locally so the app never depends on
-  # a network fetch for type — see CLAUDE.md's offline-first guarantee.
+  # design.md's script pairing: Shabnam FD for Persian/Arabic script, Rubik
+  # for Latin. Both are bundled locally so the app never depends on a
+  # network fetch for type — see CLAUDE.md's offline-first guarantee. Rubik
+  # is a variable font (one file covers the whole weight axis); Shabnam FD
+  # ships only static weight files, so three are registered under one
+  # family with explicit `weight:` mappings.
   fonts:
-    - family: Vazirmatn
+    - family: Rubik
       fonts:
-        - asset: assets/fonts/Vazirmatn.ttf
-    - family: Inter
+        - asset: assets/fonts/Rubik.ttf
+    - family: Shabnam FD
       fonts:
-        - asset: assets/fonts/Inter.ttf
+        - asset: assets/fonts/ShabnamFD-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/ShabnamFD-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/ShabnamFD-Bold.ttf
+          weight: 700
