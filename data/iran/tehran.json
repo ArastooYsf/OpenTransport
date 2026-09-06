@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "country": "IR",
+    "city": "tehran",
+    "dataVersion": "0.1.0",
+    "lastUpdated": "2026-09-06",
+    "source": [
+      {
+        "type": "community_survey",
+        "note": "Minimal seed data for the OpenTransport scaffold — 3 real Line 1 stations only, not yet verified against an official GTFS feed."
+      }
+    ]
+  },
+  "lines": [
+    {
+      "id": "tehran-line-1",
+      "name": { "fa": "خط ۱ متروی تهران", "en": "Tehran Metro Line 1" },
+      "shortName": "1",
+      "color": "#ED1C24",
+      "transportType": "metro",
+      "stationIds": ["tehran-tajrish", "tehran-imam-khomeini", "tehran-rah-ahan"],
+      "operatingHours": { "firstTrain": "05:30", "lastTrain": "22:30" }
+    }
+  ],
+  "stations": [
+    {
+      "id": "tehran-tajrish",
+      "name": { "fa": "تجریش", "en": "Tajrish" },
+      "lat": 35.8044,
+      "lng": 51.4319,
+      "lineIds": ["tehran-line-1"],
+      "accessibility": { "elevator": true, "ramp": true, "tactilePaving": true, "accessibleRestroom": false }
+    },
+    {
+      "id": "tehran-imam-khomeini",
+      "name": { "fa": "امام خمینی", "en": "Imam Khomeini" },
+      "lat": 35.6892,
+      "lng": 51.4215,
+      "lineIds": ["tehran-line-1"],
+      "accessibility": { "elevator": true, "ramp": true, "tactilePaving": false, "accessibleRestroom": false }
+    },
+    {
+      "id": "tehran-rah-ahan",
+      "name": { "fa": "راه‌آهن", "en": "Rah Ahan" },
+      "lat": 35.6553,
+      "lng": 51.4193,
+      "lineIds": ["tehran-line-1"],
+      "accessibility": { "elevator": false, "ramp": true, "tactilePaving": false, "accessibleRestroom": false }
+    }
+  ],
+  "calendar": [],
+  "trips": [],
+  "stopTimes": []
+}

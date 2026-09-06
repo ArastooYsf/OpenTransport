@@ -1,0 +1,7 @@
+{
+  "@@locale": "fa",
+  "appTitle": "اوپن‌ترانسپورت",
+  "stationListTitle": "ایستگاه‌ها",
+  "interchangeCount": "{count, plural, =1{۱ خط} other{{count} خط}}",
+  "loadError": "بارگذاری اطلاعات حمل‌ونقل ممکن نشد."
+}

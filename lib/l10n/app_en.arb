@@ -1,0 +1,22 @@
+{
+  "@@locale": "en",
+  "appTitle": "OpenTransport",
+  "@appTitle": {
+    "description": "The application title, shown in the OS app switcher."
+  },
+  "stationListTitle": "Stations",
+  "@stationListTitle": {
+    "description": "Title of the screen listing all stations for the loaded city."
+  },
+  "interchangeCount": "{count, plural, =1{1 line} other{{count} lines}}",
+  "@interchangeCount": {
+    "description": "Number of lines serving a station, shown on the station row.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "loadError": "Couldn't load transit data.",
+  "@loadError": {
+    "description": "Shown when the bundled city JSON fails to load or parse."
+  }
+}
