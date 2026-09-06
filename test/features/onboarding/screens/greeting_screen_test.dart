@@ -17,62 +17,55 @@ Widget _appUnderTest() {
   );
 }
 
-/// Advances through exactly one word's fade-in (500ms) → hold (1200ms) →
-/// fade-out (400ms) cycle, with a small buffer past each AnimationController
-/// phase's nominal duration — the same "needs strictly more than nominal
-/// duration to report complete in fake time" quirk documented elsewhere in
-/// this suite (e.g. onboarding_flow_screen_test.dart's _tapContinue).
-Future<void> _pumpOneWordCycle(WidgetTester tester) async {
-  await tester.pump(const Duration(milliseconds: 550)); // fade in
-  await tester.pump(const Duration(milliseconds: 1200)); // hold
-  await tester.pump(const Duration(milliseconds: 450)); // fade out
-  await tester.pump(); // let the next word's setState land
-}
-
 bool _continueEnabled(WidgetTester tester) {
   return tester.widget<FilledButton>(find.byType(FilledButton)).onPressed !=
       null;
 }
 
 void main() {
-  testWidgets('plays the Persian greeting first, then the next word once '
-      "its cycle finishes — never both at once", (tester) async {
+  testWidgets('Continue is enabled immediately — the greeting never gates it', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_appUnderTest());
+    expect(_continueEnabled(tester), isTrue);
+
+    // Still enabled well into the (infinitely repeating) word cycle.
+    await tester.pump(const Duration(milliseconds: 1600));
+    expect(_continueEnabled(tester), isTrue);
+  });
+
+  testWidgets('crossfades from one word to the next, forever, with no gap '
+      "of empty background between them", (tester) async {
     await tester.pumpWidget(_appUnderTest());
 
     expect(find.text('سلام'), findsOneWidget);
     expect(find.text('Hello'), findsNothing);
 
-    await _pumpOneWordCycle(tester);
+    // Word interval (800ms) elapses, then the crossfade (180ms) finishes —
+    // pumping strictly more than the nominal 180ms, since AnimatedSwitcher's
+    // ticker needs a small buffer past its exact duration to report
+    // "completed" in fake time (same quirk noted elsewhere in this suite).
+    // Not pumpAndSettle: both the word-cycling Timer.periodic and the
+    // wave AnimationController repeat forever.
+    await tester.pump(const Duration(milliseconds: 800));
+    await tester.pump(const Duration(milliseconds: 230));
 
-    expect(find.text('سلام'), findsNothing);
     expect(find.text('Hello'), findsOneWidget);
+    expect(find.text('سلام'), findsNothing);
   });
 
-  testWidgets(
-    'Continue starts disabled and only enables once the whole word + wave '
-    'sequence finishes, then hands off to onboarding',
-    (tester) async {
-      await tester.pumpWidget(_appUnderTest());
+  testWidgets('tapping Continue hands off to onboarding', (tester) async {
+    await tester.pumpWidget(_appUnderTest());
 
-      expect(_continueEnabled(tester), isFalse);
+    expect(find.byType(OnboardingFlowScreen), findsNothing);
 
-      // Five words' worth of cycles...
-      for (var i = 0; i < 5; i++) {
-        await _pumpOneWordCycle(tester);
-      }
-      // ...then the one-shot hand-wave (1600ms).
-      await tester.pump(const Duration(milliseconds: 1650));
+    await tester.tap(find.text('Continue'));
+    await tester.pump(); // register the tap before advancing fake time
+    await tester.pump(const Duration(milliseconds: 750)); // glow sweep
+    await tester.pump(const Duration(milliseconds: 200)); // post-sweep hold
+    await tester.pump(const Duration(milliseconds: 400)); // page transition
 
-      expect(_continueEnabled(tester), isTrue);
-
-      await tester.tap(find.text('Continue'));
-      await tester.pump(); // register the tap before advancing fake time
-      await tester.pump(const Duration(milliseconds: 750)); // glow sweep
-      await tester.pump(const Duration(milliseconds: 200)); // post-sweep hold
-      await tester.pump(const Duration(milliseconds: 400)); // page transition
-
-      expect(find.byType(OnboardingFlowScreen), findsOneWidget);
-      expect(find.byType(GreetingScreen), findsNothing);
-    },
-  );
+    expect(find.byType(OnboardingFlowScreen), findsOneWidget);
+    expect(find.byType(GreetingScreen), findsNothing);
+  });
 }

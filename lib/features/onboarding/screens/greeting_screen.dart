@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../../core/navigation/fade_scale_page_route.dart';
@@ -6,9 +9,9 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../widgets/continue_button.dart';
 import 'onboarding_flow_screen.dart';
 
-/// One word of [GreetingScreen]'s sequence, paired with the script pairing
-/// font it needs (see design.md's Typography section) and its own text
-/// direction — set explicitly per word rather than inherited from the
+/// One word of [GreetingScreen]'s cycling greeting, paired with the script
+/// pairing font it needs (see design.md's Typography section) and its own
+/// text direction — set explicitly per word rather than inherited from the
 /// ambient locale, since each word is a self-contained script sample, not
 /// UI copy that follows the app's current language.
 class _GreetingWord {
@@ -19,19 +22,20 @@ class _GreetingWord {
   final TextDirection direction;
 }
 
-/// A first-launch multilingual greeting, loosely inspired by (not a copy
-/// of) Apple's multi-language boot animation — but built on our own font
-/// pairing (Shabnam FD + Rubik, see design.md) rather than a system font
-/// with broad built-in script coverage. That's also why the word list below
-/// is limited to scripts those two fonts actually cover (Persian and
-/// Latin-alphabet languages) instead of Apple's much wider script mix —
-/// showing a word in a font that lacks its glyphs would just render boxes.
+/// A first-launch multilingual greeting, closely following the mechanics
+/// and pacing of Apple's multi-language boot animation (plain centered
+/// background, one large word at a time, snappy overlapping crossfades) —
+/// built with Flutter's own animation APIs and our own font pairing
+/// (Shabnam FD + Rubik, see design.md) rather than copying any Apple asset
+/// or code. The word list is limited to scripts those two fonts actually
+/// cover (Persian and Latin-alphabet languages) instead of Apple's much
+/// wider script mix — showing a word in a font that lacks its glyphs would
+/// just render boxes.
 ///
-/// Plays through [_words] exactly once — each word fades and scales in,
-/// holds, then fades out before the next one starts — followed by a single
-/// waving-hand flourish, then enables the "ادامه"/"Continue" button (which
-/// starts disabled the whole time, so the sequence can't be skipped) with
-/// its own soft fade/scale-in.
+/// Cycles through [_words] forever, each one crossfading directly into the
+/// next (no gap of empty background), with a waving-hand flourish playing
+/// concurrently the whole time. The "ادامه"/"Continue" button is enabled
+/// from the first frame — this is a decorative brand moment, not a gate.
 class GreetingScreen extends StatefulWidget {
   const GreetingScreen({super.key});
 
@@ -49,63 +53,76 @@ class _GreetingScreenState extends State<GreetingScreen>
     _GreetingWord('Ciao', AppTheme.latinFontFamily, TextDirection.ltr),
   ];
 
-  static const _fadeInDuration = Duration(milliseconds: 500);
-  static const _holdDuration = Duration(milliseconds: 1200);
-  static const _fadeOutDuration = Duration(milliseconds: 400);
-  static const _waveDuration = Duration(milliseconds: 1600);
-  static const _buttonRevealDuration = Duration(milliseconds: 300);
+  // Snappy and continuous, per Apple's actual pacing: each word gets one
+  // cycle (hold + the crossfade into the next), not a lingering hold.
+  static const _crossFadeDuration = Duration(milliseconds: 180);
+  static const _wordCycleInterval = Duration(milliseconds: 800);
 
-  late final AnimationController _wordController = AnimationController(
-    vsync: this,
-  );
+  // The hand-wave gesture itself (a few quick overshooting swings) plus a
+  // pause before it repeats — bundled into one repeating controller so it
+  // keeps playing concurrently for as long as the greeting is on screen,
+  // Telegram-big-emoji energy rather than a slow sway.
+  static const _waveSwingDuration = Duration(milliseconds: 690);
+  static const _wavePause = Duration(milliseconds: 2400);
+
+  Timer? _wordTimer;
+  int _wordIndex = 0;
+
   late final AnimationController _waveController = AnimationController(
     vsync: this,
-    duration: _waveDuration,
-  );
-  late final Animation<double> _waveAngle = TweenSequence<double>([
-    TweenSequenceItem(tween: Tween(begin: 0, end: -15), weight: 1),
-    TweenSequenceItem(tween: Tween(begin: -15, end: 15), weight: 2),
-    TweenSequenceItem(tween: Tween(begin: 15, end: -12), weight: 2),
-    TweenSequenceItem(tween: Tween(begin: -12, end: 0), weight: 1),
-  ]).animate(CurvedAnimation(parent: _waveController, curve: Curves.easeInOut));
+    duration: _waveSwingDuration + _wavePause,
+  )..repeat();
 
-  int _wordIndex = 0;
-  bool _sequenceFinished = false;
+  late final Animation<double> _waveAngleDegrees = TweenSequence<double>([
+    TweenSequenceItem(
+      tween: Tween(
+        begin: 0.0,
+        end: 20.0,
+      ).chain(CurveTween(curve: Curves.easeOut)),
+      weight: 200,
+    ),
+    TweenSequenceItem(
+      tween: Tween(
+        begin: 20.0,
+        end: -18.0,
+      ).chain(CurveTween(curve: Curves.easeOut)),
+      weight: 180,
+    ),
+    TweenSequenceItem(
+      tween: Tween(
+        begin: -18.0,
+        end: 12.0,
+      ).chain(CurveTween(curve: Curves.easeOut)),
+      weight: 160,
+    ),
+    TweenSequenceItem(
+      tween: Tween(
+        begin: 12.0,
+        end: 0.0,
+      ).chain(CurveTween(curve: Curves.easeOut)),
+      weight: 150,
+    ),
+    // Rest at 0° until the next repeat — the pause between waves.
+    TweenSequenceItem(
+      tween: ConstantTween(0.0),
+      weight: _wavePause.inMilliseconds.toDouble(),
+    ),
+  ]).animate(_waveController);
 
   @override
   void initState() {
     super.initState();
-    _playSequence();
-  }
-
-  Future<void> _playSequence() async {
-    for (var i = 0; i < _words.length; i++) {
-      if (!mounted) return;
-      setState(() => _wordIndex = i);
-      _wordController.value = 0;
-      await _wordController.animateTo(
-        1,
-        duration: _fadeInDuration,
-        curve: Curves.easeOut,
-      );
-      if (!mounted) return;
-      await Future<void>.delayed(_holdDuration);
-      if (!mounted) return;
-      await _wordController.animateTo(
-        0,
-        duration: _fadeOutDuration,
-        curve: Curves.easeIn,
-      );
-    }
-    if (!mounted) return;
-    await _waveController.forward(from: 0);
-    if (!mounted) return;
-    setState(() => _sequenceFinished = true);
+    // An infinite-repeat Timer/AnimationController pair — same as
+    // PulsingLogo on the splash screen — so widget tests must use bounded
+    // `tester.pump(duration)`, never pumpAndSettle.
+    _wordTimer = Timer.periodic(_wordCycleInterval, (_) {
+      setState(() => _wordIndex = (_wordIndex + 1) % _words.length);
+    });
   }
 
   @override
   void dispose() {
-    _wordController.dispose();
+    _wordTimer?.cancel();
     _waveController.dispose();
     super.dispose();
   }
@@ -128,16 +145,16 @@ class _GreetingScreenState extends State<GreetingScreen>
           child: Column(
             children: [
               const Spacer(flex: 3),
-              AnimatedBuilder(
-                animation: _wordController,
-                builder: (context, child) {
-                  final t = _wordController.value;
-                  return Opacity(
-                    opacity: t,
-                    child: Transform.scale(scale: 0.9 + 0.1 * t, child: child),
-                  );
-                },
+              AnimatedSwitcher(
+                duration: _crossFadeDuration,
+                switchInCurve: Curves.easeInOut,
+                switchOutCurve: Curves.easeInOut,
+                // The default transitionBuilder already fades the outgoing
+                // and incoming children simultaneously over the same
+                // window — exactly the "next word's fade-in overlaps the
+                // current word's fade-out" behavior, no dead gap.
                 child: Directionality(
+                  key: ValueKey(_wordIndex),
                   textDirection: word.direction,
                   child: Text(
                     word.text,
@@ -151,10 +168,10 @@ class _GreetingScreenState extends State<GreetingScreen>
               ),
               const SizedBox(height: 28),
               AnimatedBuilder(
-                animation: _waveAngle,
+                animation: _waveAngleDegrees,
                 builder: (context, child) {
                   return Transform.rotate(
-                    angle: _waveAngle.value * 3.14159265 / 180,
+                    angle: _waveAngleDegrees.value * math.pi / 180,
                     alignment: AlignmentDirectional.bottomCenter.resolve(
                       Directionality.of(context),
                     ),
@@ -164,20 +181,10 @@ class _GreetingScreenState extends State<GreetingScreen>
                 child: const Text('👋', style: TextStyle(fontSize: 40)),
               ),
               const Spacer(flex: 4),
-              AnimatedOpacity(
-                opacity: _sequenceFinished ? 1 : 0.4,
-                duration: _buttonRevealDuration,
-                curve: Curves.easeOut,
-                child: AnimatedScale(
-                  scale: _sequenceFinished ? 1 : 0.94,
-                  duration: _buttonRevealDuration,
-                  curve: Curves.easeOut,
-                  child: ContinueButton(
-                    label: l10n.onboardingContinueButton,
-                    enabled: _sequenceFinished,
-                    onPressed: _handleContinue,
-                  ),
-                ),
+              ContinueButton(
+                label: l10n.onboardingContinueButton,
+                enabled: true,
+                onPressed: _handleContinue,
               ),
             ],
           ),

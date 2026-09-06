@@ -91,19 +91,53 @@ class _ContinueButtonState extends State<ContinueButton>
   }
 }
 
-/// Paints a fixed-length glowing segment of the button's rounded-rect
-/// outline, at a position determined by [progress]:
+/// The perimeter fraction the glowing segment always spans while visible.
+const glowSegmentFraction = 0.22;
+
+/// A deliberate, tiny overshoot on the head position so the very last
+/// frame's segment overlaps its own closure point by a hair rather than
+/// landing exactly on it — floating-point/frame-timing slack right at
+/// closure otherwise reads as a hairline gap. Invisible mid-sweep; only
+/// matters in the last couple of pixels.
+const glowClosureOverlapPx = 1.5;
+
+/// The `(start, end)` ranges (in path-length pixels, for [PathMetric.
+/// extractPath]) to draw for the glow segment at a given [progress] (0.0 to
+/// 1.0) around a closed perimeter of length [total]:
 ///
-/// - `0.0`: zero-length, sitting at the path's start point.
-/// - Ramps up to full length ([_segmentFraction] of the perimeter) as its
-///   leading edge pulls away from the start point.
+/// - `0.0`: no ranges — zero-length, sitting at the path's start point.
+/// - Ramps up to full length ([glowSegmentFraction] of the perimeter) as
+///   its leading edge pulls away from the start point.
 /// - Holds that fixed length while sweeping the rest of the perimeter.
 /// - Shrinks back to zero-length as its trailing edge catches up to the
-///   leading edge, exactly at the start point again, when `progress == 1.0`.
+///   leading edge, exactly at the start point again, at `progress == 1.0`.
 ///
 /// So the glow visibly emerges from one point, travels the full loop, and
 /// converges back on that same point — rather than just growing outward
 /// from a fixed start like a simple progress ring.
+///
+/// [glowClosureOverlapPx] can push the head position past [total] in the
+/// final frames; a naive single range would then stop short at `total`,
+/// leaving a gap right at closure. When that happens this returns *two*
+/// ranges instead — `(tail, total)` and `(0, overflow)` — so the caller
+/// draws both pieces of the wrap rather than losing the overflow.
+List<(double, double)> glowSegmentRanges({
+  required double progress,
+  required double total,
+}) {
+  const totalHeadDistance = 1.0 + glowSegmentFraction;
+  final headRaw = progress * totalHeadDistance;
+  final head = headRaw.clamp(0.0, 1.0);
+  final tail = (headRaw - glowSegmentFraction).clamp(0.0, 1.0);
+  if (head <= tail) return const [];
+
+  final tailPx = tail * total;
+  final headPx = (head * total) + glowClosureOverlapPx;
+
+  if (headPx <= total) return [(tailPx, headPx)];
+  return [(tailPx, total), (0, headPx - total)];
+}
+
 class _GlowSegmentPainter extends CustomPainter {
   const _GlowSegmentPainter({
     required this.progress,
@@ -115,9 +149,6 @@ class _GlowSegmentPainter extends CustomPainter {
   final Color color;
   final double borderRadius;
 
-  static const _segmentFraction = 0.22;
-  static const _totalHeadDistance = 1.0 + _segmentFraction;
-
   @override
   void paint(Canvas canvas, Size size) {
     final rrect = RRect.fromRectAndRadius(
@@ -126,28 +157,30 @@ class _GlowSegmentPainter extends CustomPainter {
     );
     final metric = (Path()..addRRect(rrect)).computeMetrics().first;
     final total = metric.length;
+    final ranges = glowSegmentRanges(progress: progress, total: total);
+    if (ranges.isEmpty) return;
 
-    final headRaw = progress * _totalHeadDistance;
-    final head = headRaw.clamp(0.0, 1.0);
-    final tail = (headRaw - _segmentFraction).clamp(0.0, 1.0);
-    if (head <= tail) return;
-
-    final segment = metric.extractPath(tail * total, head * total);
-
+    // Butt caps (flat, ending exactly at the coordinate) rather than round
+    // — a round cap's dome can visually inset from the true endpoint,
+    // which reads as a gap right where the segment should meet flush with
+    // its own starting point.
     final glow = Paint()
       ..color = color.withValues(alpha: 0.35)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 8
-      ..strokeCap = StrokeCap.round
+      ..strokeCap = StrokeCap.butt
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
-    canvas.drawPath(segment, glow);
-
     final core = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5
-      ..strokeCap = StrokeCap.round;
-    canvas.drawPath(segment, core);
+      ..strokeCap = StrokeCap.butt;
+
+    for (final range in ranges) {
+      final part = metric.extractPath(range.$1, range.$2);
+      canvas.drawPath(part, glow);
+      canvas.drawPath(part, core);
+    }
   }
 
   @override
