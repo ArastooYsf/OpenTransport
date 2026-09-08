@@ -80,5 +80,11 @@
   "onboardingTutorialPromptQuestion": "می‌خوای یه آموزش سریع از برنامه ببینی؟",
   "onboardingTutorialPromptNote": "همیشه می‌تونی این آموزش رو از تنظیمات دوباره اجرا کنی.",
   "onboardingTutorialShowButton": "دیدن آموزش",
-  "onboardingTutorialSkipButton": "فعلا نه"
+  "onboardingTutorialSkipButton": "فعلا نه",
+
+  "shellTabHome": "خانه",
+  "shellTabMap": "نقشه",
+  "shellTabSaved": "ذخیره‌شده",
+  "shellTabAccount": "حساب کاربری",
+  "shellTabSettings": "تنظیمات"
 }

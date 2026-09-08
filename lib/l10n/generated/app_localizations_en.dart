@@ -220,4 +220,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingTutorialSkipButton => 'Not now';
+
+  @override
+  String get shellTabHome => 'Home';
+
+  @override
+  String get shellTabMap => 'Map';
+
+  @override
+  String get shellTabSaved => 'Saved';
+
+  @override
+  String get shellTabAccount => 'Account';
+
+  @override
+  String get shellTabSettings => 'Settings';
 }

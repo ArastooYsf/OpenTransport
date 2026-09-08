@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/navigation/fade_scale_page_route.dart';
-import '../../home/screens/home_screen.dart';
+import '../../shell/screens/main_shell_screen.dart';
 import '../dialogs/skip_all_confirm_dialog.dart';
 import '../models/onboarding_state.dart';
 import '../providers/onboarding_providers.dart';
@@ -14,7 +14,7 @@ import 'steps/email_password_step.dart';
 import 'steps/profile_step.dart';
 
 /// Hosts the first-launch onboarding wizard: owns step navigation, the
-/// "skip all" confirmation chain, and the hand-off to [HomeScreen].
+/// "skip all" confirmation chain, and the hand-off to [MainShellScreen].
 class OnboardingFlowScreen extends ConsumerStatefulWidget {
   const OnboardingFlowScreen({super.key});
 
@@ -42,7 +42,7 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
   }) {
     Navigator.of(context).pushReplacement(
       fadeScalePageRoute(
-        HomeScreen(
+        MainShellScreen(
           showWithoutAccountNotice: showWithoutAccountNotice,
           showTutorialPrompt: showTutorialPrompt,
         ),

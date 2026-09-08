@@ -13,11 +13,16 @@ import '../utils/contrast_color.dart';
 /// distinct pacing rather than drawing from this set.
 abstract final class AppMotion {
   /// Micro-interactions: icon swaps (clear button, show/hide, status
-  /// icons), suggestion-row checkmarks.
+  /// icons), suggestion-row checkmarks, [MainBottomNavBar]'s press-down/
+  /// spring-back feedback (felt before a tab is "officially" selected, so
+  /// it reads as immediate rather than as part of the slower switch below).
   static const fast = Duration(milliseconds: 150);
 
   /// The default for most implicit transitions: step-circle fill/scale,
-  /// dropdown entrance, password-strength segments.
+  /// dropdown entrance, password-strength segments, and every piece of
+  /// [MainBottomNavBar]'s tab-switch (indicator slide, icon crossfade+
+  /// bounce, label color) — all driven off this one duration so they stay
+  /// synchronized rather than each picking its own number.
   static const base = Duration(milliseconds: 250);
 
   /// Larger movements: step-to-step slide/fade, route push/pop.

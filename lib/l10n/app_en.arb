@@ -181,5 +181,16 @@
   "onboardingTutorialShowButton": "Show tutorial",
   "@onboardingTutorialShowButton": { "description": "Accepts the quick tour offer." },
   "onboardingTutorialSkipButton": "Not now",
-  "@onboardingTutorialSkipButton": { "description": "Declines the quick tour offer." }
+  "@onboardingTutorialSkipButton": { "description": "Declines the quick tour offer." },
+
+  "shellTabHome": "Home",
+  "@shellTabHome": { "description": "Main bottom nav bar tab label." },
+  "shellTabMap": "Map",
+  "@shellTabMap": { "description": "Main bottom nav bar tab label." },
+  "shellTabSaved": "Saved",
+  "@shellTabSaved": { "description": "Main bottom nav bar tab label." },
+  "shellTabAccount": "Account",
+  "@shellTabAccount": { "description": "Main bottom nav bar tab label." },
+  "shellTabSettings": "Settings",
+  "@shellTabSettings": { "description": "Main bottom nav bar tab label." }
 }

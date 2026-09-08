@@ -214,4 +214,19 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get onboardingTutorialSkipButton => 'فعلا نه';
+
+  @override
+  String get shellTabHome => 'خانه';
+
+  @override
+  String get shellTabMap => 'نقشه';
+
+  @override
+  String get shellTabSaved => 'ذخیره‌شده';
+
+  @override
+  String get shellTabAccount => 'حساب کاربری';
+
+  @override
+  String get shellTabSettings => 'تنظیمات';
 }

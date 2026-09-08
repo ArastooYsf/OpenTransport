@@ -469,6 +469,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not now'**
   String get onboardingTutorialSkipButton;
+
+  /// Main bottom nav bar tab label.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get shellTabHome;
+
+  /// Main bottom nav bar tab label.
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get shellTabMap;
+
+  /// Main bottom nav bar tab label.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get shellTabSaved;
+
+  /// Main bottom nav bar tab label.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get shellTabAccount;
+
+  /// Main bottom nav bar tab label.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get shellTabSettings;
 }
 
 class _AppLocalizationsDelegate
