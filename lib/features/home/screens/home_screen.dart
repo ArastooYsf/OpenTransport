@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../../core/widgets/placeholder_screen.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -65,14 +66,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 24),
               OptionCard(
-                icon: Icons.alt_route_rounded,
+                icon: PhosphorIconsRegular.flowArrow,
                 title: l10n.homeSmartTitle,
                 subtitle: l10n.homeSmartSubtitle,
                 prominent: true,
                 onTap: () => _openPlaceholder(
                   context,
                   title: l10n.homeSmartTitle,
-                  icon: Icons.alt_route_rounded,
+                  icon: PhosphorIconsRegular.flowArrow,
                 ),
               ),
               const SizedBox(height: 16),
@@ -81,27 +82,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                     child: OptionCard(
-                      icon: Icons.train_rounded,
+                      icon: PhosphorIconsRegular.train,
                       title: l10n.homeMetroTitle,
                       subtitle: l10n.homeMetroSubtitle,
                       onTap: () => _openPlaceholder(
                         context,
                         title: l10n.homeMetroTitle,
-                        icon: Icons.train_rounded,
+                        icon: PhosphorIconsRegular.train,
                       ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: OptionCard(
-                      icon: Icons.directions_bus_filled_rounded,
+                      icon: PhosphorIconsRegular.bus,
                       title: l10n.homeBrtTitle,
                       badge: l10n.homeBrtComingSoon,
                       muted: true,
                       onTap: () => _openPlaceholder(
                         context,
                         title: l10n.homeBrtTitle,
-                        icon: Icons.directions_bus_filled_rounded,
+                        icon: PhosphorIconsRegular.bus,
                       ),
                     ),
                   ),

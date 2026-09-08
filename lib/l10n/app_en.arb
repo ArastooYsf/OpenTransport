@@ -63,6 +63,28 @@
       "total": { "type": "int" }
     }
   },
+  "onboardingStepCircleLabel": "Step {step}: {state}",
+  "@onboardingStepCircleLabel": {
+    "description": "Screen-reader label for one step-indicator circle, combining its position with its state.",
+    "placeholders": {
+      "step": { "type": "int" },
+      "state": { "type": "String" }
+    }
+  },
+  "onboardingStepStateUpcoming": "upcoming",
+  "@onboardingStepStateUpcoming": { "description": "Step-circle state, read out by a screen reader." },
+  "onboardingStepStateCurrent": "current",
+  "@onboardingStepStateCurrent": { "description": "Step-circle state, read out by a screen reader." },
+  "onboardingStepStateCompleted": "completed",
+  "@onboardingStepStateCompleted": { "description": "Step-circle state, read out by a screen reader." },
+  "onboardingStepStateSkipped": "incomplete",
+  "@onboardingStepStateSkipped": { "description": "Step-circle state, read out by a screen reader." },
+  "onboardingBackButtonTooltip": "Back",
+  "@onboardingBackButtonTooltip": { "description": "Accessibility label for the step-back icon button." },
+  "onboardingUsernameCheckingStatus": "Checking availability",
+  "@onboardingUsernameCheckingStatus": { "description": "Screen-reader announcement while the username availability check is in flight." },
+  "onboardingUsernameAvailableStatus": "Username available",
+  "@onboardingUsernameAvailableStatus": { "description": "Screen-reader announcement once the username is confirmed available." },
   "onboardingSkipConfirmMessage": "If you skip, that's totally fine — you can still use the maps. But without an account you won't be able to: save your favorite routes, sync your settings across your devices, or contribute new data to the community.",
   "@onboardingSkipConfirmMessage": {
     "description": "Confirmation dialog shown when tapping 'Skip all' during onboarding."

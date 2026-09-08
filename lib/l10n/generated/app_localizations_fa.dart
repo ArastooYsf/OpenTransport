@@ -64,6 +64,32 @@ class AppLocalizationsFa extends AppLocalizations {
   }
 
   @override
+  String onboardingStepCircleLabel(int step, String state) {
+    return 'مرحله $step: $state';
+  }
+
+  @override
+  String get onboardingStepStateUpcoming => 'پیش‌رو';
+
+  @override
+  String get onboardingStepStateCurrent => 'فعلی';
+
+  @override
+  String get onboardingStepStateCompleted => 'تکمیل‌شده';
+
+  @override
+  String get onboardingStepStateSkipped => 'ناقص';
+
+  @override
+  String get onboardingBackButtonTooltip => 'بازگشت';
+
+  @override
+  String get onboardingUsernameCheckingStatus => 'در حال بررسی موجود بودن';
+
+  @override
+  String get onboardingUsernameAvailableStatus => 'این نام کاربری موجود است';
+
+  @override
   String get onboardingSkipConfirmMessage =>
       'اگه رد کنی، مشکلی برات پیش نمیاد و می‌تونی از نقشه‌ها استفاده کنی. ولی بدون حساب کاربری نمی‌تونی: مسیرهای موردعلاقه‌تو ذخیره کنی، تنظیماتت بین گوشی‌هات هماهنگ بشه، یا داده‌ی جدید به جامعه اضافه کنی.';
 

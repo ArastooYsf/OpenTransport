@@ -62,4 +62,22 @@ void main() {
 
     expect(find.text("This section is coming soon."), findsOneWidget);
   });
+
+  // design.md requires every screen to work at a small phone width and in
+  // both LTR/RTL without clipping or overflow — the Metro/BRT row (two
+  // Expanded OptionCards side by side) is the most overflow-prone layout
+  // on this screen.
+  for (final locale in const [Locale('en'), Locale('fa')]) {
+    testWidgets('no overflow at a small phone width (${locale.languageCode})', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(320, 568));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(_appUnderTest(locale));
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(tester.takeException(), isNull);
+    });
+  }
 }

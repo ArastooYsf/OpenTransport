@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_theme.dart' show AppColorsX;
+import '../../../core/theme/app_theme.dart' show AppColorsX, AppTheme;
 import '../../../core/utils/contrast_color.dart';
 
 /// The big, full-width "Continue" button pinned at the bottom of each
@@ -37,9 +37,12 @@ class ContinueButton extends StatefulWidget {
 
 class _ContinueButtonState extends State<ContinueButton>
     with TickerProviderStateMixin {
-  static const _ringDuration = Duration(milliseconds: 650);
-  static const _fillDuration = Duration(milliseconds: 400);
-  static const _borderRadius = 26.0;
+  // design.md caps a primary-action confirmation at "~1s total including
+  // any settle/pause" — 480 + 320 = 800ms, leaving real margin rather than
+  // sitting right at the limit.
+  static const _ringDuration = Duration(milliseconds: 480);
+  static const _fillDuration = Duration(milliseconds: 320);
+  static const _borderRadius = AppTheme.pillRadius;
 
   late final AnimationController _ringController = AnimationController(
     vsync: this,

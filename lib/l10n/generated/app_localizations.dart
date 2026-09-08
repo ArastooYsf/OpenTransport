@@ -188,6 +188,54 @@ abstract class AppLocalizations {
   /// **'Step {step} of {total}'**
   String onboardingStepIndicator(int step, int total);
 
+  /// Screen-reader label for one step-indicator circle, combining its position with its state.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step}: {state}'**
+  String onboardingStepCircleLabel(int step, String state);
+
+  /// Step-circle state, read out by a screen reader.
+  ///
+  /// In en, this message translates to:
+  /// **'upcoming'**
+  String get onboardingStepStateUpcoming;
+
+  /// Step-circle state, read out by a screen reader.
+  ///
+  /// In en, this message translates to:
+  /// **'current'**
+  String get onboardingStepStateCurrent;
+
+  /// Step-circle state, read out by a screen reader.
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get onboardingStepStateCompleted;
+
+  /// Step-circle state, read out by a screen reader.
+  ///
+  /// In en, this message translates to:
+  /// **'incomplete'**
+  String get onboardingStepStateSkipped;
+
+  /// Accessibility label for the step-back icon button.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get onboardingBackButtonTooltip;
+
+  /// Screen-reader announcement while the username availability check is in flight.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking availability'**
+  String get onboardingUsernameCheckingStatus;
+
+  /// Screen-reader announcement once the username is confirmed available.
+  ///
+  /// In en, this message translates to:
+  /// **'Username available'**
+  String get onboardingUsernameAvailableStatus;
+
   /// Confirmation dialog shown when tapping 'Skip all' during onboarding.
   ///
   /// In en, this message translates to:

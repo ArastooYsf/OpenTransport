@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 
+import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../providers/onboarding_providers.dart';
 import '../../validation.dart';
@@ -94,10 +95,18 @@ class _EmailPasswordStepState extends ConsumerState<EmailPasswordStep> {
                     : l10n.onboardingPasswordMinLengthNote,
                 helperMaxLines: 2,
                 trailingStatus: IconButton(
-                  icon: Icon(
-                    _obscure
-                        ? PhosphorIconsRegular.eye
-                        : PhosphorIconsRegular.eyeSlash,
+                  icon: AnimatedSwitcher(
+                    duration: AppMotion.fast,
+                    transitionBuilder: (child, animation) => ScaleTransition(
+                      scale: animation,
+                      child: FadeTransition(opacity: animation, child: child),
+                    ),
+                    child: Icon(
+                      _obscure
+                          ? PhosphorIconsRegular.eye
+                          : PhosphorIconsRegular.eyeSlash,
+                      key: ValueKey(_obscure),
+                    ),
                   ),
                   tooltip: _obscure
                       ? l10n.onboardingShowPasswordTooltip

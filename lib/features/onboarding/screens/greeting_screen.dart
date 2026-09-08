@@ -145,40 +145,56 @@ class _GreetingScreenState extends State<GreetingScreen>
           child: Column(
             children: [
               const Spacer(flex: 3),
-              AnimatedSwitcher(
-                duration: _crossFadeDuration,
-                switchInCurve: Curves.easeInOut,
-                switchOutCurve: Curves.easeInOut,
-                // The default transitionBuilder already fades the outgoing
-                // and incoming children simultaneously over the same
-                // window — exactly the "next word's fade-in overlaps the
-                // current word's fade-out" behavior, no dead gap.
-                child: Directionality(
-                  key: ValueKey(_wordIndex),
-                  textDirection: word.direction,
-                  child: Text(
-                    word.text,
-                    style: TextStyle(
-                      fontFamily: word.fontFamily,
-                      fontSize: 48,
-                      fontWeight: FontWeight.w600,
+              // Purely decorative — a screen reader has nothing useful to
+              // announce from a word cycling every 800ms in five languages
+              // it may not even read; ExcludeSemantics keeps the whole
+              // brand moment out of the accessibility tree rather than
+              // spamming a live region.
+              ExcludeSemantics(
+                child: AnimatedSwitcher(
+                  duration: _crossFadeDuration,
+                  switchInCurve: Curves.easeInOut,
+                  switchOutCurve: Curves.easeInOut,
+                  // The default transitionBuilder already fades the
+                  // outgoing and incoming children simultaneously over the
+                  // same window — exactly the "next word's fade-in
+                  // overlaps the current word's fade-out" behavior, no
+                  // dead gap.
+                  child: Directionality(
+                    key: ValueKey(_wordIndex),
+                    textDirection: word.direction,
+                    child: Text(
+                      word.text,
+                      style: TextStyle(
+                        fontFamily: word.fontFamily,
+                        fontSize: 48,
+                        // w700, not w600: Shabnam FD only ships 400/500/700
+                        // as real static weights, so a Persian word at w600
+                        // would silently snap to whichever of those the
+                        // engine picks — a different, undefined-looking
+                        // weight from the Latin words' true 600. w700 is
+                        // the one emphasis weight both fonts actually have.
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 28),
-              AnimatedBuilder(
-                animation: _waveAngleDegrees,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: _waveAngleDegrees.value * math.pi / 180,
-                    alignment: AlignmentDirectional.bottomCenter.resolve(
-                      Directionality.of(context),
-                    ),
-                    child: child,
-                  );
-                },
-                child: const Text('👋', style: TextStyle(fontSize: 40)),
+              ExcludeSemantics(
+                child: AnimatedBuilder(
+                  animation: _waveAngleDegrees,
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: _waveAngleDegrees.value * math.pi / 180,
+                      alignment: AlignmentDirectional.bottomCenter.resolve(
+                        Directionality.of(context),
+                      ),
+                      child: child,
+                    );
+                  },
+                  child: const Text('👋', style: TextStyle(fontSize: 40)),
+                ),
               ),
               const Spacer(flex: 4),
               ContinueButton(

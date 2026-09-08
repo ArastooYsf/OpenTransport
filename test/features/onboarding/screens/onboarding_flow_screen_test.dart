@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:open_transport/core/theme/app_theme.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:open_transport/features/onboarding/providers/onboarding_providers.dart';
 import 'package:open_transport/features/onboarding/screens/onboarding_flow_screen.dart';
 import 'package:open_transport/l10n/generated/app_localizations.dart';
@@ -19,7 +20,7 @@ Widget _appUnderTest(ProviderContainer container) {
 }
 
 /// Taps the full-width Continue button and lets its two-phase confirmation
-/// — the growing ring (650ms) then the circular accent-fill reveal (400ms)
+/// — the growing ring (480ms) then the circular accent-fill reveal (320ms)
 /// — finish before the step actually advances.
 Future<void> _tapContinue(WidgetTester tester) async {
   await tester.tap(find.text('Continue'));
@@ -28,8 +29,8 @@ Future<void> _tapContinue(WidgetTester tester) async {
   // forward() future needs a small buffer past its exact duration to
   // report complete in fake time (same quirk as AnimatedSwitcher — see
   // greeting_screen_test).
-  await tester.pump(const Duration(milliseconds: 700)); // growing ring
-  await tester.pump(const Duration(milliseconds: 450)); // circular fill
+  await tester.pump(const Duration(milliseconds: 550)); // growing ring
+  await tester.pump(const Duration(milliseconds: 370)); // circular fill
   await tester.pump(const Duration(milliseconds: 400)); // step transition
 }
 
@@ -72,7 +73,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
 
     expect(container.read(onboardingProvider).username, 'arastoo1');
-    expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
+    expect(find.byIcon(PhosphorIconsFill.checkCircle), findsOneWidget);
 
     await _tapContinue(tester);
 

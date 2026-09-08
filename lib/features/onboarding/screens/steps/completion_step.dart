@@ -88,21 +88,24 @@ class _CompletionStepState extends ConsumerState<CompletionStep> {
         // A single emitter, top-center, firing one explosive burst — every
         // piece releases at once rather than streaming continuously, then
         // falls and fades under the confetti package's own gravity/fade.
-        ConfettiWidget(
-          confettiController: _confettiController,
-          blastDirectionality: BlastDirectionality.explosive,
-          numberOfParticles: 40,
-          maxBlastForce: 20,
-          minBlastForce: 10,
-          gravity: 0.3,
-          shouldLoop: false,
-          colors: [
-            colors.accent,
-            colors.success,
-            colors.warning,
-            colors.danger,
-            colors.info,
-          ],
+        // Purely decorative, so it's excluded from the accessibility tree.
+        ExcludeSemantics(
+          child: ConfettiWidget(
+            confettiController: _confettiController,
+            blastDirectionality: BlastDirectionality.explosive,
+            numberOfParticles: 40,
+            maxBlastForce: 20,
+            minBlastForce: 10,
+            gravity: 0.3,
+            shouldLoop: false,
+            colors: [
+              colors.accent,
+              colors.success,
+              colors.warning,
+              colors.danger,
+              colors.info,
+            ],
+          ),
         ),
       ],
     );

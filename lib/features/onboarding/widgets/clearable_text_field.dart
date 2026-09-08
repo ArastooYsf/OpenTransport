@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:phosphor_icons/phosphor_icons.dart';
 
-import '../../../l10n/generated/app_localizations.dart';
+import 'animated_clear_icon.dart';
 
 /// A [TextField] with a design.md-standard leading icon (the field's
 /// meaning — a person for a name field, an at-sign for email, ...) and a
@@ -35,7 +34,6 @@ class ClearableTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
       builder: (context, value, _) {
@@ -54,24 +52,15 @@ class ClearableTextField extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ?trailingStatus,
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 150),
-                  transitionBuilder: (child, animation) =>
-                      FadeTransition(opacity: animation, child: child),
-                  child: value.text.isEmpty
-                      ? const SizedBox(key: ValueKey('empty'), width: 0)
-                      : IconButton(
-                          key: const ValueKey('clear'),
-                          icon: const Icon(PhosphorIconsRegular.x),
-                          tooltip: l10n.onboardingClearFieldTooltip,
-                          // controller.clear() alone doesn't fire
-                          // onChanged (that only fires from real typing),
-                          // so state would go stale — call it explicitly.
-                          onPressed: () {
-                            controller.clear();
-                            onChanged?.call('');
-                          },
-                        ),
+                AnimatedClearIcon(
+                  visible: value.text.isNotEmpty,
+                  // controller.clear() alone doesn't fire onChanged (that
+                  // only fires from real typing), so state would go stale
+                  // — call it explicitly.
+                  onPressed: () {
+                    controller.clear();
+                    onChanged?.call('');
+                  },
                 ),
               ],
             ),

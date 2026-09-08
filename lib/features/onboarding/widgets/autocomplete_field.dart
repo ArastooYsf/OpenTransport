@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:phosphor_icons/phosphor_icons.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/search_normalize.dart';
-import '../../../l10n/generated/app_localizations.dart';
+import 'animated_clear_icon.dart';
 
 /// A typeahead field styled like a modern web form input: rounded, subtle
 /// border, floating label, live-filtered dropdown that updates per
@@ -92,7 +92,6 @@ class _AutocompleteFieldState<T extends Object>
       optionsBuilder: (value) => _filter(value.text),
       onSelected: widget.onSelected,
       fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-        final l10n = AppLocalizations.of(context);
         return ValueListenableBuilder<TextEditingValue>(
           valueListenable: controller,
           builder: (context, value, _) {
@@ -107,13 +106,10 @@ class _AutocompleteFieldState<T extends Object>
                 prefixIcon: widget.fieldIcon == null
                     ? null
                     : Icon(widget.fieldIcon),
-                suffixIcon: value.text.isEmpty
-                    ? null
-                    : IconButton(
-                        icon: const Icon(PhosphorIconsRegular.x),
-                        tooltip: l10n.onboardingClearFieldTooltip,
-                        onPressed: () => controller.clear(),
-                      ),
+                suffixIcon: AnimatedClearIcon(
+                  visible: value.text.isNotEmpty,
+                  onPressed: () => controller.clear(),
+                ),
               ),
             );
           },
@@ -192,7 +188,7 @@ class _AnimatedOptionsPanelState extends State<_AnimatedOptionsPanel>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 200),
+    duration: AppMotion.base,
   )..forward();
 
   @override
@@ -203,7 +199,7 @@ class _AnimatedOptionsPanelState extends State<_AnimatedOptionsPanel>
 
   @override
   Widget build(BuildContext context) {
-    final curved = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    final curved = CurvedAnimation(parent: _controller, curve: AppMotion.curve);
     return Align(
       alignment: AlignmentDirectional.topStart,
       child: FadeTransition(
@@ -212,8 +208,9 @@ class _AnimatedOptionsPanelState extends State<_AnimatedOptionsPanel>
           scale: Tween<double>(begin: 0.94, end: 1).animate(curved),
           alignment: Alignment.topCenter,
           child: Material(
-            elevation: 3,
-            borderRadius: BorderRadius.circular(14),
+            // design.md's Elevation section: dropdowns/menus are Level 2.
+            elevation: AppElevation.level2,
+            borderRadius: BorderRadius.circular(AppTheme.fieldRadius),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 260),
               child: widget.child,

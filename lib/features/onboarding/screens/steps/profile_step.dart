@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 
+import '../../../../core/theme/app_theme.dart';
 import '../../../../data/providers/username_availability_providers.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../providers/onboarding_providers.dart';
@@ -196,9 +197,23 @@ class _UsernameStatusIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    return switch (status) {
+
+    // Screen-reader announcement for the two states that have no other
+    // accessible surface — "taken"/"invalidFormat" already reach a screen
+    // reader via the field's own errorText below.
+    final String? liveAnnouncement = switch (status) {
+      _UsernameStatus.checking => l10n.onboardingUsernameCheckingStatus,
+      _UsernameStatus.available => l10n.onboardingUsernameAvailableStatus,
+      _UsernameStatus.taken ||
+      _UsernameStatus.invalidFormat ||
+      _UsernameStatus.idle => null,
+    };
+
+    final child = switch (status) {
       _UsernameStatus.checking => const Padding(
+        key: ValueKey('checking'),
         padding: EdgeInsets.all(14),
         child: SizedBox(
           width: 16,
@@ -207,14 +222,29 @@ class _UsernameStatusIcon extends StatelessWidget {
         ),
       ),
       _UsernameStatus.available => Icon(
-        Icons.check_circle_rounded,
+        key: const ValueKey('available'),
+        PhosphorIconsFill.checkCircle,
         color: scheme.primary,
       ),
       _UsernameStatus.taken || _UsernameStatus.invalidFormat => Icon(
-        Icons.cancel_rounded,
+        key: const ValueKey('rejected'),
+        PhosphorIconsFill.xCircle,
         color: scheme.error,
       ),
-      _UsernameStatus.idle => const SizedBox.shrink(),
+      _UsernameStatus.idle => const SizedBox.shrink(key: ValueKey('idle')),
     };
+
+    return Semantics(
+      liveRegion: liveAnnouncement != null,
+      label: liveAnnouncement,
+      child: AnimatedSwitcher(
+        duration: AppMotion.fast,
+        transitionBuilder: (child, animation) => ScaleTransition(
+          scale: animation,
+          child: FadeTransition(opacity: animation, child: child),
+        ),
+        child: child,
+      ),
+    );
   }
 }

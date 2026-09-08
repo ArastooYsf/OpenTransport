@@ -23,6 +23,20 @@
       "total": { "type": "int" }
     }
   },
+  "onboardingStepCircleLabel": "مرحله {step}: {state}",
+  "@onboardingStepCircleLabel": {
+    "placeholders": {
+      "step": { "type": "int" },
+      "state": { "type": "String" }
+    }
+  },
+  "onboardingStepStateUpcoming": "پیش‌رو",
+  "onboardingStepStateCurrent": "فعلی",
+  "onboardingStepStateCompleted": "تکمیل‌شده",
+  "onboardingStepStateSkipped": "ناقص",
+  "onboardingBackButtonTooltip": "بازگشت",
+  "onboardingUsernameCheckingStatus": "در حال بررسی موجود بودن",
+  "onboardingUsernameAvailableStatus": "این نام کاربری موجود است",
   "onboardingSkipConfirmMessage": "اگه رد کنی، مشکلی برات پیش نمیاد و می‌تونی از نقشه‌ها استفاده کنی. ولی بدون حساب کاربری نمی‌تونی: مسیرهای موردعلاقه‌تو ذخیره کنی، تنظیماتت بین گوشی‌هات هماهنگ بشه، یا داده‌ی جدید به جامعه اضافه کنی.",
   "onboardingWithoutAccountTitle": "بدون حساب کاربری",
   "onboardingWithoutAccountIntro": "بدون حساب کاربری نمی‌تونی:",

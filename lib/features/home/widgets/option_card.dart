@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
+
+import '../../../core/theme/app_theme.dart';
 
 /// One tappable home-screen destination (Metro, BRT, Smart routing).
 ///
@@ -52,7 +55,7 @@ class OptionCard extends StatelessWidget {
       iconColor = scheme.primary;
     }
 
-    final borderRadius = BorderRadius.circular(20);
+    final borderRadius = BorderRadius.circular(AppTheme.cardRadius);
     final iconBadge = Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: iconBackground, shape: BoxShape.circle),
@@ -61,6 +64,13 @@ class OptionCard extends StatelessWidget {
 
     return Material(
       color: background,
+      // The card's own background is already a deliberately-tinted role
+      // color (primaryContainer / surfaceContainerHigh / -Low, see above),
+      // so it carries design.md's dark-mode "lighter surface tint" on its
+      // own — an M3 elevation tint on top of that would just muddy it.
+      // The shadow below is what actually expresses Level 1 elevation.
+      surfaceTintColor: Colors.transparent,
+      elevation: AppElevation.level1,
       borderRadius: borderRadius,
       child: InkWell(
         borderRadius: borderRadius,
@@ -117,15 +127,19 @@ class _ProminentLayout extends StatelessWidget {
             children: [
               Text(
                 title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: textTheme.titleLarge?.copyWith(
                   color: foreground,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               if (subtitle != null) ...[
                 const SizedBox(height: 4),
                 Text(
                   subtitle!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: textTheme.bodyMedium?.copyWith(
                     color: foreground.withValues(alpha: 0.8),
                   ),
@@ -135,13 +149,13 @@ class _ProminentLayout extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
+        // Every Phosphor glyph ships with matchTextDirection: true, so
+        // Icon auto-mirrors this against the ambient Directionality with
+        // no extra plumbing — it always points toward reading-forward.
         Icon(
-          Icons.arrow_forward_ios_rounded,
+          PhosphorIconsRegular.caretRight,
           size: 18,
           color: foreground.withValues(alpha: 0.6),
-          // Auto-mirrors so it always points toward reading-forward, in
-          // both LTR and RTL, without any manual left/right logic.
-          textDirection: Directionality.of(context),
         ),
       ],
     );
@@ -175,15 +189,19 @@ class _RegularLayout extends StatelessWidget {
         const SizedBox(height: 14),
         Text(
           title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: textTheme.titleMedium?.copyWith(
             color: foreground,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
         ),
         if (subtitle != null) ...[
           const SizedBox(height: 2),
           Text(
             subtitle!,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: textTheme.bodySmall?.copyWith(
               color: foreground.withValues(alpha: 0.75),
             ),

@@ -37,7 +37,7 @@ class OnboardingStepper extends ConsumerWidget {
           l10n.onboardingStepIndicator(currentIndex + 1, stepCount),
           style: Theme.of(
             context,
-          ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+          ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 16),
         SizedBox(
@@ -72,7 +72,10 @@ class OnboardingStepper extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   for (var i = 0; i < stepCount; i++) ...[
-                    _StepCircle(state: stepCircleStateFor(state, i)),
+                    _StepCircle(
+                      stepNumber: i + 1,
+                      state: stepCircleStateFor(state, i),
+                    ),
                     if (i != stepCount - 1) const Expanded(child: SizedBox()),
                   ],
                 ],
@@ -128,8 +131,8 @@ class _StepSegment extends StatelessWidget {
               ),
               // Foreground layer: animates to the live per-field fraction.
               AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
+                duration: AppMotion.base,
+                curve: AppMotion.curve,
                 width: constraints.maxWidth * fillFraction.clamp(0.0, 1.0),
                 height: _lineThickness,
                 color: color,
@@ -143,13 +146,15 @@ class _StepSegment extends StatelessWidget {
 }
 
 class _StepCircle extends StatelessWidget {
-  const _StepCircle({required this.state});
+  const _StepCircle({required this.stepNumber, required this.state});
 
+  final int stepNumber;
   final StepCircleState state;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = AppLocalizations.of(context);
 
     final (
       Color background,
@@ -183,28 +188,44 @@ class _StepCircle extends StatelessWidget {
       ),
     };
 
-    return TweenAnimationBuilder<double>(
-      key: ValueKey(state),
-      tween: Tween<double>(begin: 0.85, end: scale),
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOut,
-      builder: (context, animatedScale, child) {
-        return Transform.scale(scale: animatedScale, child: child);
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOut,
-        width: _circleSize,
-        height: _circleSize,
-        decoration: BoxDecoration(color: background, shape: BoxShape.circle),
-        child: Center(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            transitionBuilder: (child, animation) => ScaleTransition(
-              scale: animation,
-              child: FadeTransition(opacity: animation, child: child),
+    final stateText = switch (state) {
+      StepCircleState.upcoming => l10n.onboardingStepStateUpcoming,
+      StepCircleState.current => l10n.onboardingStepStateCurrent,
+      StepCircleState.completed => l10n.onboardingStepStateCompleted,
+      StepCircleState.skippedIncomplete => l10n.onboardingStepStateSkipped,
+    };
+
+    return Semantics(
+      label: l10n.onboardingStepCircleLabel(stepNumber, stateText),
+      excludeSemantics: true,
+      child: TweenAnimationBuilder<double>(
+        key: ValueKey(state),
+        tween: Tween<double>(begin: 0.85, end: scale),
+        duration: AppMotion.base,
+        curve: AppMotion.curve,
+        builder: (context, animatedScale, child) {
+          return Transform.scale(scale: animatedScale, child: child);
+        },
+        child: AnimatedContainer(
+          duration: AppMotion.base,
+          curve: AppMotion.curve,
+          width: _circleSize,
+          height: _circleSize,
+          decoration: BoxDecoration(color: background, shape: BoxShape.circle),
+          child: Center(
+            child: AnimatedSwitcher(
+              duration: AppMotion.fast,
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: animation,
+                child: FadeTransition(opacity: animation, child: child),
+              ),
+              child: Icon(
+                icon,
+                key: ValueKey(icon),
+                size: 22,
+                color: iconColor,
+              ),
             ),
-            child: Icon(icon, key: ValueKey(icon), size: 22, color: iconColor),
           ),
         ),
       ),

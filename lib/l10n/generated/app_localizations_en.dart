@@ -65,6 +65,32 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String onboardingStepCircleLabel(int step, String state) {
+    return 'Step $step: $state';
+  }
+
+  @override
+  String get onboardingStepStateUpcoming => 'upcoming';
+
+  @override
+  String get onboardingStepStateCurrent => 'current';
+
+  @override
+  String get onboardingStepStateCompleted => 'completed';
+
+  @override
+  String get onboardingStepStateSkipped => 'incomplete';
+
+  @override
+  String get onboardingBackButtonTooltip => 'Back';
+
+  @override
+  String get onboardingUsernameCheckingStatus => 'Checking availability';
+
+  @override
+  String get onboardingUsernameAvailableStatus => 'Username available';
+
+  @override
   String get onboardingSkipConfirmMessage =>
       'If you skip, that\'s totally fine — you can still use the maps. But without an account you won\'t be able to: save your favorite routes, sync your settings across your devices, or contribute new data to the community.';
 

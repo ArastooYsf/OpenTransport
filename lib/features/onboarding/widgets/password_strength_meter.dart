@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/contrast_color.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../validation.dart';
 
@@ -53,8 +55,8 @@ class PasswordStrengthMeter extends StatelessWidget {
                     end: i == _segmentCount - 1 ? 0 : 4,
                   ),
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeOut,
+                    duration: AppMotion.base,
+                    curve: AppMotion.curve,
                     height: 4,
                     decoration: BoxDecoration(
                       color: i < filledSegments
@@ -67,14 +69,29 @@ class PasswordStrengthMeter extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 6),
-        AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: 200),
-          style: Theme.of(context).textTheme.labelMedium!.copyWith(
+        const SizedBox(height: 8),
+        // A filled pill (color + computed-contrast text), the same
+        // fill-plus-readable-text pattern line badges use — not raw
+        // colored text directly on the surface. design.md's own
+        // `warning`/`success`/`danger` hexes fail WCAG text contrast at
+        // this size against a light background (as low as 2.15:1 for
+        // warning), so the label needs a guaranteed-readable pairing
+        // rather than the semantic hue itself as the text color.
+        AnimatedContainer(
+          duration: AppMotion.fast,
+          curve: AppMotion.curve,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
             color: color,
-            fontWeight: FontWeight.w600,
+            borderRadius: BorderRadius.circular(999),
           ),
-          child: Text(label),
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: readableTextColorFor(color),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
         const SizedBox(height: 12),
         _SuggestionRow(
@@ -111,9 +128,15 @@ class _SuggestionRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
+            duration: AppMotion.fast,
+            transitionBuilder: (child, animation) => ScaleTransition(
+              scale: animation,
+              child: FadeTransition(opacity: animation, child: child),
+            ),
             child: Icon(
-              satisfied ? Icons.check_circle_rounded : Icons.circle_outlined,
+              satisfied
+                  ? PhosphorIconsFill.checkCircle
+                  : PhosphorIconsRegular.circle,
               key: ValueKey(satisfied),
               size: 16,
               color: color,
