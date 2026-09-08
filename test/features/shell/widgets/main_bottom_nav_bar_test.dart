@@ -85,6 +85,41 @@ void main() {
     },
   );
 
+  testWidgets('the liquid indicator stretches mid-travel but stays within the '
+      "20-30% 'subtle, not glitchy' bound, and settles back to its resting "
+      'width once the tab switch completes', (tester) async {
+    ShellTab selected = ShellTab.home;
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (context, setState) => _appUnderTest(
+          selected: selected,
+          onSelected: (tab) => setState(() => selected = tab),
+        ),
+      ),
+    );
+
+    double indicatorWidth() => tester
+        .widget<PositionedDirectional>(find.byType(PositionedDirectional))
+        .width!;
+
+    const restWidth = MainBottomNavBar.indicatorDiameter;
+    expect(indicatorWidth(), restWidth);
+
+    await tester.tap(find.bySemanticsLabel('Settings'));
+    // Register the tap and let the transition actually start (a fresh
+    // AnimationController reads as "at rest" on the very frame it starts)
+    // before sampling ~40% into AppMotion.base (250ms), where the stretch
+    // peaks.
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    final peakWidth = indicatorWidth();
+    expect(peakWidth, greaterThan(restWidth));
+    expect(peakWidth, lessThanOrEqualTo(restWidth * 1.3));
+
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(indicatorWidth(), closeTo(restWidth, 0.5));
+  });
+
   testWidgets('tab order mirrors in RTL — Home renders on the opposite '
       'side from LTR', (tester) async {
     await tester.pumpWidget(
