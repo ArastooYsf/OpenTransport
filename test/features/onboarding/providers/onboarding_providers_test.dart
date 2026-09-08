@@ -9,6 +9,7 @@ void main() {
     test("picks the country's official language when supported", () {
       const iran = AvailableCountry(
         slug: 'iran',
+        defaultCitySlug: 'tehran',
         isoCode: 'IR',
         name: {'fa': 'ایران', 'en': 'Iran'},
         officialLanguageCode: 'fa',
@@ -19,6 +20,7 @@ void main() {
     test('falls back to English when the official language is unsupported', () {
       const hypothetical = AvailableCountry(
         slug: 'hypothetical',
+        defaultCitySlug: 'hypothetical-city',
         isoCode: 'XX',
         name: {'en': 'Hypothetical'},
         officialLanguageCode: 'xx',

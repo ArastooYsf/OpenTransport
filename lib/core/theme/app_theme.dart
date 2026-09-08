@@ -280,12 +280,20 @@ abstract final class AppTheme {
         ),
       ),
       // Dialogs are the most pronounced surface in the elevation scale
-      // (Level 3) — "floating above everything else."
+      // (Level 3) — "floating above everything else." Bottom sheets share
+      // the same treatment — design.md groups them with dialogs.
       dialogTheme: DialogThemeData(
         backgroundColor: colors.surfaceElevated,
         elevation: AppElevation.level3,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(cardRadius),
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: colors.surfaceElevated,
+        elevation: AppElevation.level3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(cardRadius)),
         ),
       ),
       textTheme: _textTheme(colors),

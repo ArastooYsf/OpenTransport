@@ -1,20 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:open_transport/core/theme/app_theme.dart';
 import 'package:open_transport/features/home/screens/home_screen.dart';
 import 'package:open_transport/l10n/generated/app_localizations.dart';
+import 'package:phosphor_icons/phosphor_icons.dart';
+
+import '../../../test_utils/fake_preferences_repository.dart';
 
 Widget _appUnderTest(Locale locale) {
-  return MaterialApp(
-    locale: locale,
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    home: const HomeScreen(),
+  return ProviderScope(
+    overrides: [fakePreferencesOverride()],
+    child: MaterialApp(
+      theme: AppTheme.light(locale),
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: const HomeScreen(),
+    ),
   );
 }
 
+/// Pumps until [finder] finds something or [timeout] elapses — the city
+/// data (and so the dynamic options list) loads via a real, non-fake-clock
+/// asset read, so a single fixed-duration pump can race it under load.
+Future<void> _pumpUntilFound(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 10),
+}) async {
+  final end = DateTime.now().add(timeout);
+  while (finder.evaluate().isEmpty && DateTime.now().isBefore(end)) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+}
+
 void main() {
-  testWidgets('renders all three options in English (LTR)', (tester) async {
+  setUp(() {
+    // See station_list_screen_test.dart's identical setUp: without this,
+    // rootBundle's internal string cache can hand a later test a Future
+    // tied to an already-torn-down test zone, which then never resolves.
+    rootBundle.clear();
+  });
+
+  testWidgets('renders Smart (always) and Metro (from Tehran\'s data) in '
+      'English (LTR) — Tehran has no BRT/bus/tram data, so those tiles '
+      "don't appear", (tester) async {
     await tester.pumpWidget(_appUnderTest(const Locale('en')));
+    await _pumpUntilFound(tester, find.text('Metro'));
 
     expect(find.text('Smart'), findsOneWidget);
     expect(
@@ -22,8 +56,10 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Metro'), findsOneWidget);
-    expect(find.text('BRT'), findsOneWidget);
-    expect(find.text('Coming soon'), findsOneWidget);
+    expect(find.text('Lines & stations'), findsOneWidget);
+    expect(find.text('BRT'), findsNothing);
+    expect(find.text('Bus'), findsNothing);
+    expect(find.text('Tram'), findsNothing);
 
     final directionality = tester.widget<Directionality>(
       find.byType(Directionality).first,
@@ -31,13 +67,13 @@ void main() {
     expect(directionality.textDirection, TextDirection.ltr);
   });
 
-  testWidgets('renders all three options in Persian (RTL)', (tester) async {
+  testWidgets('renders Smart and Metro in Persian (RTL)', (tester) async {
     await tester.pumpWidget(_appUnderTest(const Locale('fa')));
+    await _pumpUntilFound(tester, find.text('مترو'));
 
     expect(find.text('همگانی'), findsOneWidget);
     expect(find.text('مترو'), findsOneWidget);
-    expect(find.text('BRT'), findsOneWidget);
-    expect(find.text('به‌زودی'), findsOneWidget);
+    expect(find.text('BRT'), findsNothing);
 
     final directionality = tester.widget<Directionality>(
       find.byType(Directionality).first,
@@ -47,26 +83,35 @@ void main() {
 
   testWidgets('tapping Metro opens a placeholder screen', (tester) async {
     await tester.pumpWidget(_appUnderTest(const Locale('en')));
+    await _pumpUntilFound(tester, find.text('Metro'));
 
     await tester.tap(find.text('Metro'));
     await tester.pumpAndSettle();
 
-    expect(find.text("This section is coming soon."), findsOneWidget);
+    expect(find.text('This section is coming soon.'), findsOneWidget);
   });
 
-  testWidgets('tapping the muted BRT option still navigates', (tester) async {
+  testWidgets('tapping Smart still navigates', (tester) async {
     await tester.pumpWidget(_appUnderTest(const Locale('en')));
+    await _pumpUntilFound(tester, find.text('Smart'));
 
-    await tester.tap(find.text('BRT'));
+    await tester.tap(find.text('Smart'));
     await tester.pumpAndSettle();
 
-    expect(find.text("This section is coming soon."), findsOneWidget);
+    expect(find.text('This section is coming soon.'), findsOneWidget);
+  });
+
+  testWidgets('shows a country switcher and a language switcher in the top '
+      'bar', (tester) async {
+    await tester.pumpWidget(_appUnderTest(const Locale('en')));
+    await _pumpUntilFound(tester, find.text('Metro'));
+
+    expect(find.text('Iran'), findsOneWidget); // country switcher label
+    expect(find.text('English'), findsOneWidget); // language switcher label
   });
 
   // design.md requires every screen to work at a small phone width and in
-  // both LTR/RTL without clipping or overflow — the Metro/BRT row (two
-  // Expanded OptionCards side by side) is the most overflow-prone layout
-  // on this screen.
+  // both LTR/RTL without clipping or overflow.
   for (final locale in const [Locale('en'), Locale('fa')]) {
     testWidgets('no overflow at a small phone width (${locale.languageCode})', (
       tester,
@@ -75,6 +120,7 @@ void main() {
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       await tester.pumpWidget(_appUnderTest(locale));
+      await _pumpUntilFound(tester, find.byIcon(PhosphorIconsRegular.train));
       await tester.pump(const Duration(milliseconds: 400));
 
       expect(tester.takeException(), isNull);

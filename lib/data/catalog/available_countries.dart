@@ -9,6 +9,7 @@ import 'available_country.dart';
 const availableCountries = <AvailableCountry>[
   AvailableCountry(
     slug: 'iran',
+    defaultCitySlug: 'tehran',
     isoCode: 'IR',
     name: {'fa': 'ایران', 'en': 'Iran'},
     officialLanguageCode: 'fa',

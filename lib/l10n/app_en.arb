@@ -31,9 +31,45 @@
   "@homeBrtTitle": {
     "description": "Home screen option: Bus Rapid Transit. Kept as the acronym in every language."
   },
+  "homeBrtSubtitle": "Bus rapid transit",
+  "@homeBrtSubtitle": {
+    "description": "Subtitle for the BRT option on the home screen, shown once a city's data actually has BRT lines."
+  },
   "homeBrtComingSoon": "Coming soon",
   "@homeBrtComingSoon": {
-    "description": "Badge shown on the BRT option, which isn't fully built yet."
+    "description": "Unused while no bundled city has BRT data yet — kept for when a BRT-only, not-yet-timetabled city needs it."
+  },
+  "homeBusTitle": "Bus",
+  "@homeBusTitle": {
+    "description": "Home screen option, shown when a city's data has regular-bus lines."
+  },
+  "homeBusSubtitle": "Bus lines & stops",
+  "@homeBusSubtitle": {
+    "description": "Subtitle for the Bus option on the home screen."
+  },
+  "homeTramTitle": "Tram",
+  "@homeTramTitle": {
+    "description": "Home screen option, shown when a city's data has tram lines."
+  },
+  "homeTramSubtitle": "Tram lines & stops",
+  "@homeTramSubtitle": {
+    "description": "Subtitle for the Tram option on the home screen."
+  },
+  "homeCommuterRailTitle": "Commuter rail",
+  "@homeCommuterRailTitle": {
+    "description": "Home screen option, shown when a city's data has commuter-rail lines."
+  },
+  "homeCommuterRailSubtitle": "Regional lines & stops",
+  "@homeCommuterRailSubtitle": {
+    "description": "Subtitle for the Commuter rail option on the home screen."
+  },
+  "homeOtherTransportTitle": "Other",
+  "@homeOtherTransportTitle": {
+    "description": "Home screen option for a transportType not covered by a more specific tile (schema.json's 'other')."
+  },
+  "homeOtherTransportSubtitle": "Lines & stops",
+  "@homeOtherTransportSubtitle": {
+    "description": "Subtitle for the Other option on the home screen."
   },
   "homeSmartTitle": "Smart",
   "@homeSmartTitle": {
@@ -42,6 +78,14 @@
   "homeSmartSubtitle": "The easiest way to any destination or station",
   "@homeSmartSubtitle": {
     "description": "Subtitle explaining the Smart option on the home screen."
+  },
+  "homeCountrySwitcherTooltip": "Change country",
+  "@homeCountrySwitcherTooltip": {
+    "description": "Accessibility label for the home screen's country switcher chip."
+  },
+  "homeLanguageSwitcherTooltip": "Change language",
+  "@homeLanguageSwitcherTooltip": {
+    "description": "Accessibility label for the home screen's language switcher chip."
   },
   "placeholderComingSoonMessage": "This section is coming soon.",
   "@placeholderComingSoonMessage": {
@@ -149,8 +193,8 @@
   "@onboardingEmailLabel": { "description": "Email field label." },
   "onboardingEmailInvalid": "Enter a valid email address",
   "@onboardingEmailInvalid": { "description": "Error text shown once the email field has been touched and doesn't look like a valid address." },
-  "onboardingClearFieldTooltip": "Clear",
-  "@onboardingClearFieldTooltip": { "description": "Accessibility label for the trailing clear (X) icon on a text field." },
+  "commonClearFieldTooltip": "Clear",
+  "@commonClearFieldTooltip": { "description": "Accessibility label for the trailing clear (X) icon on any text field, onboarding or otherwise." },
   "onboardingShowPasswordTooltip": "Show password",
   "@onboardingShowPasswordTooltip": { "description": "Accessibility label for the password field's visibility toggle when the password is currently hidden." },
   "onboardingHidePasswordTooltip": "Hide password",

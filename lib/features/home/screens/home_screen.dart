@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../../core/widgets/placeholder_screen.dart';
+import '../../../data/providers/transit_data_providers.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../onboarding/dialogs/tutorial_prompt_dialog.dart';
 import '../../onboarding/dialogs/without_account_notice_dialog.dart';
+import '../models/transport_type_info.dart';
+import '../widgets/home_top_bar.dart';
 import '../widgets/option_card.dart';
 
 /// The app's landing screen: a neutral, brand-colored hub for choosing how
 /// to get around — never tied to a specific line color (see design.md,
 /// "Map-first" and the color system's line-vs-brand separation).
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({
     super.key,
     this.showWithoutAccountNotice = false,
@@ -27,10 +31,10 @@ class HomeScreen extends StatefulWidget {
   final bool showTutorialPrompt;
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   static const _tutorialPromptDelay = Duration(milliseconds: 700);
 
   @override
@@ -50,6 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    // Present in every city regardless of data — Smart is cross-mode by
+    // definition, not tied to any one transportType.
+    final availableTypes = ref.watch(availableTransportTypesProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -58,6 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const HomeTopBar(),
+              const SizedBox(height: 20),
               Text(
                 l10n.appTitle,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -76,38 +85,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: PhosphorIconsRegular.flowArrow,
                 ),
               ),
-              const SizedBox(height: 16),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: OptionCard(
-                      icon: PhosphorIconsRegular.train,
-                      title: l10n.homeMetroTitle,
-                      subtitle: l10n.homeMetroSubtitle,
-                      onTap: () => _openPlaceholder(
-                        context,
-                        title: l10n.homeMetroTitle,
-                        icon: PhosphorIconsRegular.train,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: OptionCard(
-                      icon: PhosphorIconsRegular.bus,
-                      title: l10n.homeBrtTitle,
-                      badge: l10n.homeBrtComingSoon,
-                      muted: true,
-                      onTap: () => _openPlaceholder(
-                        context,
-                        title: l10n.homeBrtTitle,
-                        icon: PhosphorIconsRegular.bus,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              if (availableTypes.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    const spacing = 16.0;
+                    final tileWidth = (constraints.maxWidth - spacing) / 2;
+                    return Wrap(
+                      spacing: spacing,
+                      runSpacing: spacing,
+                      children: [
+                        for (final type in availableTypes)
+                          SizedBox(
+                            width: tileWidth,
+                            child: OptionCard(
+                              icon: type.icon,
+                              title: type.title(l10n),
+                              subtitle: type.subtitle(l10n),
+                              onTap: () => _openPlaceholder(
+                                context,
+                                title: type.title(l10n),
+                                icon: type.icon,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              ],
             ],
           ),
         ),

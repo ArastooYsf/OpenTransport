@@ -38,7 +38,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeBrtTitle => 'BRT';
 
   @override
+  String get homeBrtSubtitle => 'Bus rapid transit';
+
+  @override
   String get homeBrtComingSoon => 'Coming soon';
+
+  @override
+  String get homeBusTitle => 'Bus';
+
+  @override
+  String get homeBusSubtitle => 'Bus lines & stops';
+
+  @override
+  String get homeTramTitle => 'Tram';
+
+  @override
+  String get homeTramSubtitle => 'Tram lines & stops';
+
+  @override
+  String get homeCommuterRailTitle => 'Commuter rail';
+
+  @override
+  String get homeCommuterRailSubtitle => 'Regional lines & stops';
+
+  @override
+  String get homeOtherTransportTitle => 'Other';
+
+  @override
+  String get homeOtherTransportSubtitle => 'Lines & stops';
 
   @override
   String get homeSmartTitle => 'Smart';
@@ -46,6 +73,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get homeSmartSubtitle =>
       'The easiest way to any destination or station';
+
+  @override
+  String get homeCountrySwitcherTooltip => 'Change country';
+
+  @override
+  String get homeLanguageSwitcherTooltip => 'Change language';
 
   @override
   String get placeholderComingSoonMessage => 'This section is coming soon.';
@@ -168,7 +201,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingEmailInvalid => 'Enter a valid email address';
 
   @override
-  String get onboardingClearFieldTooltip => 'Clear';
+  String get commonClearFieldTooltip => 'Clear';
 
   @override
   String get onboardingShowPasswordTooltip => 'Show password';

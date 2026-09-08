@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../l10n/generated/app_localizations.dart';
-import '../providers/station_list_providers.dart';
+import '../../../data/providers/transit_data_providers.dart';
 import '../widgets/station_row.dart';
 
 /// Lists every station in the currently loaded city, each with badges for

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'animated_clear_icon.dart';
+import '../../../core/widgets/animated_clear_icon.dart';
 
 /// A [TextField] with a design.md-standard leading icon (the field's
 /// meaning — a person for a name field, an at-sign for email, ...) and a

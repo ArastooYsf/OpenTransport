@@ -2,14 +2,36 @@ import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/providers/app_locale_provider.dart';
 import 'core/theme/app_theme.dart';
+import 'data/providers/preferences_providers.dart';
+import 'data/repositories/preferences_repository.dart';
 import 'features/splash/screens/splash_screen.dart';
 import 'l10n/generated/app_localizations.dart';
 
-void main() {
-  runApp(const ProviderScope(child: OpenTransportApp()));
+/// The Hive box name for [HivePreferencesRepository] — opened here, before
+/// [runApp], so every provider built from [preferencesRepositoryProvider]
+/// (country, language) can read it synchronously from its very first
+/// build, with no loading state to account for.
+const _preferencesBoxName = 'preferences';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  final preferencesBox = await Hive.openBox<String>(_preferencesBoxName);
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        preferencesRepositoryProvider.overrideWithValue(
+          HivePreferencesRepository(preferencesBox),
+        ),
+      ],
+      child: const OpenTransportApp(),
+    ),
+  );
 }
 
 class OpenTransportApp extends ConsumerWidget {

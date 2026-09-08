@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_theme.dart';
-import '../../../core/utils/search_normalize.dart';
+import '../theme/app_theme.dart';
+import '../utils/search_normalize.dart';
 import 'animated_clear_icon.dart';
 
 /// A typeahead field styled like a modern web form input: rounded, subtle
@@ -12,6 +12,12 @@ import 'animated_clear_icon.dart';
 /// [searchableText] returns for an option (e.g. a country's Persian *and*
 /// English names at once), so typing in either script finds a match — see
 /// core/utils/search_normalize.dart for why no transliteration is needed.
+///
+/// Shared across the app (onboarding's country/language pickers, Home's
+/// country/language switchers) — a generic, self-contained UI component,
+/// not tied to any one feature's business logic, so it lives in `core/`
+/// per CLAUDE.md's architecture rules rather than being duplicated or
+/// imported feature-to-feature.
 class AutocompleteField<T extends Object> extends StatefulWidget {
   const AutocompleteField({
     super.key,

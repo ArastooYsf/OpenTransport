@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:open_transport/core/theme/app_theme.dart';
 import 'package:open_transport/features/shell/screens/main_shell_screen.dart';
 import 'package:open_transport/l10n/generated/app_localizations.dart';
 
+import '../../../test_utils/fake_preferences_repository.dart';
+
 Widget _appUnderTest({bool showTutorialPrompt = false}) {
   const locale = Locale('en');
-  return MaterialApp(
-    theme: AppTheme.light(locale),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    home: MainShellScreen(showTutorialPrompt: showTutorialPrompt),
+  return ProviderScope(
+    overrides: [fakePreferencesOverride()],
+    child: MaterialApp(
+      theme: AppTheme.light(locale),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: MainShellScreen(showTutorialPrompt: showTutorialPrompt),
+    ),
   );
 }
 
 void main() {
+  setUp(() {
+    // See station_list_screen_test.dart's identical setUp: without this,
+    // rootBundle's internal string cache can hand a later test a Future
+    // tied to an already-torn-down test zone, which then never resolves.
+    rootBundle.clear();
+  });
+
   testWidgets('Home tab is shown by default', (tester) async {
     await tester.pumpWidget(_appUnderTest());
 

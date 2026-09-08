@@ -15,6 +15,13 @@ class AvailableCountry with _$AvailableCountry {
     /// The `data/<slug>/` folder name, e.g. `'iran'`.
     required String slug,
 
+    /// The city slug (matching a `data/<slug>/<city>.json` file) shown
+    /// when this country is selected. Only one city per country is
+    /// bundled today — city selection itself is out of scope until the
+    /// map/routing work lands (see `station_list_providers.dart`) — so
+    /// this is simply "the" city rather than a default among several.
+    required String defaultCitySlug,
+
     /// ISO 3166-1 alpha-2 code, e.g. `'IR'` — matches each city file's
     /// `meta.country`.
     required String isoCode,

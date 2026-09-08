@@ -40,6 +40,12 @@ dependencies:
   # State management (see CLAUDE.md — Riverpod is the only state pattern used).
   flutter_riverpod: ^2.6.1
 
+  # Local persistence for user preferences (country/language choice) — see
+  # data/repositories/preferences_repository.dart. Plain string key/value
+  # storage only, so no hive_generator/build_runner TypeAdapter is needed.
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
   # Immutable data models + JSON (de)serialization for transit data files.
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0

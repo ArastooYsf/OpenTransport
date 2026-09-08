@@ -3,31 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../../../core/providers/app_locale_provider.dart';
+import '../../../../core/providers/current_country_provider.dart';
 import '../../../../core/utils/flag_emoji.dart';
+import '../../../../core/utils/language_names.dart';
 import '../../../../core/utils/localized_text.dart';
+import '../../../../core/widgets/autocomplete_field.dart';
 import '../../../../data/catalog/available_country.dart';
 import '../../../../data/providers/country_catalog_providers.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../providers/onboarding_providers.dart';
-import '../../widgets/autocomplete_field.dart';
 import '../../widgets/continue_button.dart';
-
-/// A language's English name and its own endonym — e.g. `('Persian',
-/// 'فارسی')`. Displayed as "English (endonym)" regardless of the current UI
-/// locale, so the field reads the same way a native OS language picker
-/// does. Neither half is translated UI copy (an endonym is the language's
-/// own name for itself; the English name is a fixed label, not a string
-/// that changes per locale), so these aren't ARB entries — the same way a
-/// station's own-language name in schema.json isn't re-translated.
-const _languageNames = <String, (String english, String native)>{
-  'en': ('English', 'English'),
-  'fa': ('Persian', 'فارسی'),
-};
-
-String _languageDisplayText(String code) {
-  final names = _languageNames[code];
-  return names == null ? code : '${names.$1} (${names.$2})';
-}
 
 /// Step 1: country, then the app's language (pre-filled from the country's
 /// official language, but always user-confirmable via Next).
@@ -80,8 +65,8 @@ class CountryLanguageStep extends ConsumerWidget {
           label: l10n.onboardingLanguageFieldLabel,
           fieldIcon: PhosphorIconsRegular.translate,
           options: const ['en', 'fa'],
-          searchableText: (code) => [_languageDisplayText(code), code],
-          optionDisplayText: _languageDisplayText,
+          searchableText: (code) => [languageDisplayText(code), code],
+          optionDisplayText: languageDisplayText,
           selected: selectedLanguageCode,
           onSelected: notifier.selectLanguage,
           noResultsText: l10n.onboardingAutocompleteNoMatches,
@@ -96,9 +81,12 @@ class CountryLanguageStep extends ConsumerWidget {
           enabled: selectedCountry != null && selectedLanguageCode != null,
           onPressed: () {
             if (selectedLanguageCode != null) {
-              ref.read(appLocaleProvider.notifier).state = Locale(
-                selectedLanguageCode,
-              );
+              ref
+                  .read(appLocaleProvider.notifier)
+                  .select(Locale(selectedLanguageCode));
+            }
+            if (selectedCountry != null) {
+              ref.read(currentCountryProvider.notifier).select(selectedCountry);
             }
             onNext();
           },

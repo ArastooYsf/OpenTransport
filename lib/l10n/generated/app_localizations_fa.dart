@@ -38,13 +38,46 @@ class AppLocalizationsFa extends AppLocalizations {
   String get homeBrtTitle => 'BRT';
 
   @override
+  String get homeBrtSubtitle => 'اتوبوس‌رانی سریع';
+
+  @override
   String get homeBrtComingSoon => 'به‌زودی';
+
+  @override
+  String get homeBusTitle => 'اتوبوس';
+
+  @override
+  String get homeBusSubtitle => 'خطوط و ایستگاه‌های اتوبوس';
+
+  @override
+  String get homeTramTitle => 'تراموا';
+
+  @override
+  String get homeTramSubtitle => 'خطوط و ایستگاه‌های تراموا';
+
+  @override
+  String get homeCommuterRailTitle => 'قطار حومه‌ای';
+
+  @override
+  String get homeCommuterRailSubtitle => 'خطوط و ایستگاه‌های منطقه‌ای';
+
+  @override
+  String get homeOtherTransportTitle => 'سایر';
+
+  @override
+  String get homeOtherTransportSubtitle => 'خطوط و ایستگاه‌ها';
 
   @override
   String get homeSmartTitle => 'همگانی';
 
   @override
   String get homeSmartSubtitle => 'ساده‌ترین راه به هر مقصد یا ایستگاه';
+
+  @override
+  String get homeCountrySwitcherTooltip => 'تغییر کشور';
+
+  @override
+  String get homeLanguageSwitcherTooltip => 'تغییر زبان';
 
   @override
   String get placeholderComingSoonMessage => 'این بخش به‌زودی اضافه می‌شود.';
@@ -164,7 +197,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get onboardingEmailInvalid => 'یک ایمیل معتبر وارد کن';
 
   @override
-  String get onboardingClearFieldTooltip => 'پاک کردن';
+  String get commonClearFieldTooltip => 'پاک کردن';
 
   @override
   String get onboardingShowPasswordTooltip => 'نمایش رمز عبور';

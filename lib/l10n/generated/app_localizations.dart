@@ -140,11 +140,65 @@ abstract class AppLocalizations {
   /// **'BRT'**
   String get homeBrtTitle;
 
-  /// Badge shown on the BRT option, which isn't fully built yet.
+  /// Subtitle for the BRT option on the home screen, shown once a city's data actually has BRT lines.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus rapid transit'**
+  String get homeBrtSubtitle;
+
+  /// Unused while no bundled city has BRT data yet — kept for when a BRT-only, not-yet-timetabled city needs it.
   ///
   /// In en, this message translates to:
   /// **'Coming soon'**
   String get homeBrtComingSoon;
+
+  /// Home screen option, shown when a city's data has regular-bus lines.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus'**
+  String get homeBusTitle;
+
+  /// Subtitle for the Bus option on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus lines & stops'**
+  String get homeBusSubtitle;
+
+  /// Home screen option, shown when a city's data has tram lines.
+  ///
+  /// In en, this message translates to:
+  /// **'Tram'**
+  String get homeTramTitle;
+
+  /// Subtitle for the Tram option on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Tram lines & stops'**
+  String get homeTramSubtitle;
+
+  /// Home screen option, shown when a city's data has commuter-rail lines.
+  ///
+  /// In en, this message translates to:
+  /// **'Commuter rail'**
+  String get homeCommuterRailTitle;
+
+  /// Subtitle for the Commuter rail option on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Regional lines & stops'**
+  String get homeCommuterRailSubtitle;
+
+  /// Home screen option for a transportType not covered by a more specific tile (schema.json's 'other').
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get homeOtherTransportTitle;
+
+  /// Subtitle for the Other option on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Lines & stops'**
+  String get homeOtherTransportSubtitle;
 
   /// Home screen option: find the easiest way to a destination or station, across all transport types.
   ///
@@ -157,6 +211,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The easiest way to any destination or station'**
   String get homeSmartSubtitle;
+
+  /// Accessibility label for the home screen's country switcher chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Change country'**
+  String get homeCountrySwitcherTooltip;
+
+  /// Accessibility label for the home screen's language switcher chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Change language'**
+  String get homeLanguageSwitcherTooltip;
 
   /// Body text on a placeholder screen for a feature that isn't built yet.
   ///
@@ -374,11 +440,11 @@ abstract class AppLocalizations {
   /// **'Enter a valid email address'**
   String get onboardingEmailInvalid;
 
-  /// Accessibility label for the trailing clear (X) icon on a text field.
+  /// Accessibility label for the trailing clear (X) icon on any text field, onboarding or otherwise.
   ///
   /// In en, this message translates to:
   /// **'Clear'**
-  String get onboardingClearFieldTooltip;
+  String get commonClearFieldTooltip;
 
   /// Accessibility label for the password field's visibility toggle when the password is currently hidden.
   ///

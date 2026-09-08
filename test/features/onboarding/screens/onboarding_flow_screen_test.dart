@@ -7,6 +7,8 @@ import 'package:open_transport/features/onboarding/providers/onboarding_provider
 import 'package:open_transport/features/onboarding/screens/onboarding_flow_screen.dart';
 import 'package:open_transport/l10n/generated/app_localizations.dart';
 
+import '../../../test_utils/fake_preferences_repository.dart';
+
 Widget _appUnderTest(ProviderContainer container) {
   return UncontrolledProviderScope(
     container: container,
@@ -36,7 +38,7 @@ Future<void> _tapContinue(WidgetTester tester) async {
 
 void main() {
   testWidgets('happy path through all 3 steps to completion', (tester) async {
-    final container = ProviderContainer();
+    final container = ProviderContainer(overrides: [fakePreferencesOverride()]);
     addTearDown(container.dispose);
 
     await tester.pumpWidget(_appUnderTest(container));
@@ -109,7 +111,7 @@ void main() {
   testWidgets('skip all -> confirm shows the post-skip notice on Home', (
     tester,
   ) async {
-    final container = ProviderContainer();
+    final container = ProviderContainer(overrides: [fakePreferencesOverride()]);
     addTearDown(container.dispose);
 
     await tester.pumpWidget(_appUnderTest(container));

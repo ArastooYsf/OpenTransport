@@ -20,6 +20,13 @@ mixin _$AvailableCountry {
   /// The `data/<slug>/` folder name, e.g. `'iran'`.
   String get slug => throw _privateConstructorUsedError;
 
+  /// The city slug (matching a `data/<slug>/<city>.json` file) shown
+  /// when this country is selected. Only one city per country is
+  /// bundled today — city selection itself is out of scope until the
+  /// map/routing work lands (see `station_list_providers.dart`) — so
+  /// this is simply "the" city rather than a default among several.
+  String get defaultCitySlug => throw _privateConstructorUsedError;
+
   /// ISO 3166-1 alpha-2 code, e.g. `'IR'` — matches each city file's
   /// `meta.country`.
   String get isoCode => throw _privateConstructorUsedError;
@@ -48,6 +55,7 @@ abstract class $AvailableCountryCopyWith<$Res> {
   @useResult
   $Res call({
     String slug,
+    String defaultCitySlug,
     String isoCode,
     Map<String, String> name,
     String officialLanguageCode,
@@ -70,6 +78,7 @@ class _$AvailableCountryCopyWithImpl<$Res, $Val extends AvailableCountry>
   @override
   $Res call({
     Object? slug = null,
+    Object? defaultCitySlug = null,
     Object? isoCode = null,
     Object? name = null,
     Object? officialLanguageCode = null,
@@ -79,6 +88,10 @@ class _$AvailableCountryCopyWithImpl<$Res, $Val extends AvailableCountry>
             slug: null == slug
                 ? _value.slug
                 : slug // ignore: cast_nullable_to_non_nullable
+                      as String,
+            defaultCitySlug: null == defaultCitySlug
+                ? _value.defaultCitySlug
+                : defaultCitySlug // ignore: cast_nullable_to_non_nullable
                       as String,
             isoCode: null == isoCode
                 ? _value.isoCode
@@ -109,6 +122,7 @@ abstract class _$$AvailableCountryImplCopyWith<$Res>
   @useResult
   $Res call({
     String slug,
+    String defaultCitySlug,
     String isoCode,
     Map<String, String> name,
     String officialLanguageCode,
@@ -130,6 +144,7 @@ class __$$AvailableCountryImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? slug = null,
+    Object? defaultCitySlug = null,
     Object? isoCode = null,
     Object? name = null,
     Object? officialLanguageCode = null,
@@ -139,6 +154,10 @@ class __$$AvailableCountryImplCopyWithImpl<$Res>
         slug: null == slug
             ? _value.slug
             : slug // ignore: cast_nullable_to_non_nullable
+                  as String,
+        defaultCitySlug: null == defaultCitySlug
+            ? _value.defaultCitySlug
+            : defaultCitySlug // ignore: cast_nullable_to_non_nullable
                   as String,
         isoCode: null == isoCode
             ? _value.isoCode
@@ -162,6 +181,7 @@ class __$$AvailableCountryImplCopyWithImpl<$Res>
 class _$AvailableCountryImpl implements _AvailableCountry {
   const _$AvailableCountryImpl({
     required this.slug,
+    required this.defaultCitySlug,
     required this.isoCode,
     required final Map<String, String> name,
     required this.officialLanguageCode,
@@ -170,6 +190,14 @@ class _$AvailableCountryImpl implements _AvailableCountry {
   /// The `data/<slug>/` folder name, e.g. `'iran'`.
   @override
   final String slug;
+
+  /// The city slug (matching a `data/<slug>/<city>.json` file) shown
+  /// when this country is selected. Only one city per country is
+  /// bundled today — city selection itself is out of scope until the
+  /// map/routing work lands (see `station_list_providers.dart`) — so
+  /// this is simply "the" city rather than a default among several.
+  @override
+  final String defaultCitySlug;
 
   /// ISO 3166-1 alpha-2 code, e.g. `'IR'` — matches each city file's
   /// `meta.country`.
@@ -195,7 +223,7 @@ class _$AvailableCountryImpl implements _AvailableCountry {
 
   @override
   String toString() {
-    return 'AvailableCountry(slug: $slug, isoCode: $isoCode, name: $name, officialLanguageCode: $officialLanguageCode)';
+    return 'AvailableCountry(slug: $slug, defaultCitySlug: $defaultCitySlug, isoCode: $isoCode, name: $name, officialLanguageCode: $officialLanguageCode)';
   }
 
   @override
@@ -204,6 +232,8 @@ class _$AvailableCountryImpl implements _AvailableCountry {
         (other.runtimeType == runtimeType &&
             other is _$AvailableCountryImpl &&
             (identical(other.slug, slug) || other.slug == slug) &&
+            (identical(other.defaultCitySlug, defaultCitySlug) ||
+                other.defaultCitySlug == defaultCitySlug) &&
             (identical(other.isoCode, isoCode) || other.isoCode == isoCode) &&
             const DeepCollectionEquality().equals(other._name, _name) &&
             (identical(other.officialLanguageCode, officialLanguageCode) ||
@@ -214,6 +244,7 @@ class _$AvailableCountryImpl implements _AvailableCountry {
   int get hashCode => Object.hash(
     runtimeType,
     slug,
+    defaultCitySlug,
     isoCode,
     const DeepCollectionEquality().hash(_name),
     officialLanguageCode,
@@ -234,6 +265,7 @@ class _$AvailableCountryImpl implements _AvailableCountry {
 abstract class _AvailableCountry implements AvailableCountry {
   const factory _AvailableCountry({
     required final String slug,
+    required final String defaultCitySlug,
     required final String isoCode,
     required final Map<String, String> name,
     required final String officialLanguageCode,
@@ -242,6 +274,14 @@ abstract class _AvailableCountry implements AvailableCountry {
   /// The `data/<slug>/` folder name, e.g. `'iran'`.
   @override
   String get slug;
+
+  /// The city slug (matching a `data/<slug>/<city>.json` file) shown
+  /// when this country is selected. Only one city per country is
+  /// bundled today — city selection itself is out of scope until the
+  /// map/routing work lands (see `station_list_providers.dart`) — so
+  /// this is simply "the" city rather than a default among several.
+  @override
+  String get defaultCitySlug;
 
   /// ISO 3166-1 alpha-2 code, e.g. `'IR'` — matches each city file's
   /// `meta.country`.
