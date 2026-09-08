@@ -64,6 +64,8 @@ dependencies:
   # IconData became a `final` class — `phosphor_icons` is the actively
   # maintained, Flutter-3.43+-compatible alternative.)
   phosphor_icons: ^3.0.1
+  flutter_map: ^8.3.2
+  latlong2: ^0.10.1
 
 dev_dependencies:
   flutter_test:
@@ -93,9 +95,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # Bundled offline transit data, one file per city — see data/schema.json.
+  # Bundled offline transit data, one city per pair of files — see
+  # structure.schema.json (lines/stations) and schedule.schema.json
+  # (calendar/trips/stopTimes).
   assets:
     - data/iran/tehran.json
+    - data/iran/tehran.schedule.json
     - assets/logo_placeholder.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see

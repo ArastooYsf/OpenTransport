@@ -6,7 +6,7 @@
 
 - [ ] Code change (UI, state management, logic)
 - [ ] New or updated transit data (`data/<country>/<city>.json`)
-- [ ] Schema change (`schema.json`) — must be paired with a `CONTRIBUTING.md` update per CLAUDE.md
+- [ ] Schema change (`structure.schema.json`/`schedule.schema.json`) — must be paired with a `CONTRIBUTING.md` update per CLAUDE.md
 - [ ] Documentation only
 - [ ] Other (please describe)
 

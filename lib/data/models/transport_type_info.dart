@@ -1,15 +1,17 @@
 import 'package:flutter/widgets.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 
-import '../../../data/models/transit_line.dart';
-import '../../../l10n/generated/app_localizations.dart';
+import 'transit_line.dart';
+import '../../l10n/generated/app_localizations.dart';
 
-/// Home-screen presentation for each [TransportType] — the icon and
-/// localized title/subtitle for its options-list tile (see [HomeScreen]),
+/// Shared presentation for each [TransportType] — icon (both weights, per
+/// design.md's mixed outline/fill system), and localized title/subtitle —
 /// generated from whichever transport types are actually present in the
-/// loaded city's data rather than a hardcoded tile list.
+/// loaded city's data rather than a hardcoded set. Used by Home's dynamic
+/// options list and the Map feature's mode segmented control (its [title]
+/// doubles as a short tab label).
 extension TransportTypeInfo on TransportType {
-  IconData get icon => switch (this) {
+  IconData get outlineIcon => switch (this) {
     TransportType.metro => PhosphorIconsRegular.train,
     TransportType.bus => PhosphorIconsRegular.bus,
     TransportType.tram => PhosphorIconsRegular.tram,
@@ -17,6 +19,15 @@ extension TransportTypeInfo on TransportType {
     TransportType.brt => PhosphorIconsRegular.bus,
     TransportType.commuterRail => PhosphorIconsRegular.trainRegional,
     TransportType.other => PhosphorIconsRegular.path,
+  };
+
+  IconData get fillIcon => switch (this) {
+    TransportType.metro => PhosphorIconsFill.train,
+    TransportType.bus => PhosphorIconsFill.bus,
+    TransportType.tram => PhosphorIconsFill.tram,
+    TransportType.brt => PhosphorIconsFill.bus,
+    TransportType.commuterRail => PhosphorIconsFill.trainRegional,
+    TransportType.other => PhosphorIconsFill.path,
   };
 
   String title(AppLocalizations l10n) => switch (this) {

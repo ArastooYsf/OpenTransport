@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../../core/widgets/placeholder_screen.dart';
+import '../../../data/models/transport_type_info.dart';
 import '../../../data/providers/transit_data_providers.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../onboarding/dialogs/tutorial_prompt_dialog.dart';
 import '../../onboarding/dialogs/without_account_notice_dialog.dart';
-import '../models/transport_type_info.dart';
 import '../widgets/home_top_bar.dart';
 import '../widgets/option_card.dart';
 
@@ -99,13 +99,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           SizedBox(
                             width: tileWidth,
                             child: OptionCard(
-                              icon: type.icon,
+                              icon: type.outlineIcon,
                               title: type.title(l10n),
                               subtitle: type.subtitle(l10n),
                               onTap: () => _openPlaceholder(
                                 context,
                                 title: type.title(l10n),
-                                icon: type.icon,
+                                icon: type.outlineIcon,
                               ),
                             ),
                           ),

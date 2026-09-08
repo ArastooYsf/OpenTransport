@@ -1,0 +1,216 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.org/metro-app/schedule.schema.json",
+  "title": "Transit City Schedule",
+  "description": "One file per city: data/<country>/<city>.schedule.json. Companion file to <city>.json (validated against structure.schema.json). Contains GTFS-style timing data only (calendar/trips/stopTimes) so schedules can be corrected/improved independently of line and station geometry. lineId/stationId values here must reference ids that exist in the companion structure file — validate cross-file references in scripts/validate_data.py, not just this schema in isolation.",
+  "type": "object",
+  "required": [
+    "meta",
+    "calendar",
+    "trips",
+    "stopTimes"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "country",
+        "city",
+        "dataVersion",
+        "lastUpdated",
+        "source"
+      ],
+      "description": "Same shape as the structure file's meta block, but versioned independently — schedule data changes on its own cadence (timetable revisions), separate from structural changes (new stations/lines).",
+      "properties": {
+        "country": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 code, e.g. 'IR'"
+        },
+        "city": {
+          "type": "string",
+          "description": "Machine-readable slug, e.g. 'tehran'"
+        },
+        "dataVersion": {
+          "type": "string",
+          "description": "Semver-like string, bumped on every published change, e.g. '1.4.0'"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date",
+          "description": "YYYY-MM-DD, date this file's data was last verified/edited"
+        },
+        "source": {
+          "type": "array",
+          "description": "Where this data came from, for traceability and re-verification",
+          "items": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "osm",
+                  "official_gtfs",
+                  "official_other",
+                  "community_survey",
+                  "other"
+                ]
+              },
+              "url": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "calendar": {
+      "type": "array",
+      "description": "Service patterns, GTFS-style — which days a given service pattern runs.",
+      "items": {
+        "$ref": "#/definitions/calendarEntry"
+      }
+    },
+    "trips": {
+      "type": "array",
+      "description": "One trip = one train's run along a line in one direction, tied to a service pattern.",
+      "items": {
+        "$ref": "#/definitions/trip"
+      }
+    },
+    "stopTimes": {
+      "type": "array",
+      "description": "Per-station arrival/departure times for each trip — this is the full GTFS-style timetable.",
+      "items": {
+        "$ref": "#/definitions/stopTime"
+      }
+    }
+  },
+  "definitions": {
+    "calendarEntry": {
+      "type": "object",
+      "required": [
+        "id",
+        "daysOfWeek"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "e.g. 'weekday', 'friday', 'holiday'"
+        },
+        "daysOfWeek": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "mon",
+              "tue",
+              "wed",
+              "thu",
+              "fri",
+              "sat",
+              "sun"
+            ]
+          }
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "exceptions": {
+          "type": "array",
+          "description": "Specific added/removed dates (holidays, etc.)",
+          "items": {
+            "type": "object",
+            "required": [
+              "date",
+              "type"
+            ],
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "added",
+                  "removed"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "trip": {
+      "type": "object",
+      "required": [
+        "id",
+        "lineId",
+        "direction",
+        "calendarId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "lineId": {
+          "type": "string"
+        },
+        "direction": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ],
+          "description": "0 = matches line.stationIds order, 1 = reverse"
+        },
+        "calendarId": {
+          "type": "string",
+          "description": "References a calendar.id"
+        }
+      }
+    },
+    "stopTime": {
+      "type": "object",
+      "required": [
+        "tripId",
+        "stationId",
+        "arrivalTime",
+        "stopSequence"
+      ],
+      "properties": {
+        "tripId": {
+          "type": "string"
+        },
+        "stationId": {
+          "type": "string"
+        },
+        "arrivalTime": {
+          "type": "string",
+          "pattern": "^([0-1][0-9]|2[0-4]):[0-5][0-9]:[0-5][0-9]$",
+          "description": "HH:MM:SS, can exceed 24:00:00 for past-midnight trips, GTFS-style"
+        },
+        "departureTime": {
+          "type": "string",
+          "pattern": "^([0-1][0-9]|2[0-4]):[0-5][0-9]:[0-5][0-9]$"
+        },
+        "stopSequence": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Order of this stop within the trip"
+        }
+      }
+    }
+  }
+}

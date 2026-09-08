@@ -1,0 +1,235 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.org/metro-app/structure.schema.json",
+  "title": "Transit City Structure",
+  "description": "One file per city: data/<country>/<city>.json. Describes transport lines and stations only — geography and network shape. Rarely changes. For arrival/departure times, see the companion schedule.schema.json file (data/<country>/<city>.schedule.json).",
+  "type": "object",
+  "required": [
+    "meta",
+    "lines",
+    "stations"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "country",
+        "city",
+        "dataVersion",
+        "lastUpdated",
+        "source"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 code, e.g. 'IR'"
+        },
+        "city": {
+          "type": "string",
+          "description": "Machine-readable slug, e.g. 'tehran'"
+        },
+        "dataVersion": {
+          "type": "string",
+          "description": "Semver-like string, bumped on every published change, e.g. '1.4.0'"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date",
+          "description": "YYYY-MM-DD, date this file's data was last verified/edited"
+        },
+        "source": {
+          "type": "array",
+          "description": "Where this data came from, for traceability and re-verification",
+          "items": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "osm",
+                  "official_gtfs",
+                  "official_other",
+                  "community_survey",
+                  "other"
+                ]
+              },
+              "url": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "localizedText": {
+      "type": "object",
+      "description": "Map of locale code to text, e.g. { \"fa\": \"تجریش\", \"en\": \"Tajrish\" }. At minimum include the local-language name.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "lines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/line"
+      }
+    },
+    "stations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/station"
+      }
+    }
+  },
+  "definitions": {
+    "line": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "color",
+        "transportType",
+        "stationIds"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable unique id, e.g. 'tehran-line-1'"
+        },
+        "name": {
+          "$ref": "#/properties/localizedText"
+        },
+        "shortName": {
+          "type": "string",
+          "description": "Short label for badges, e.g. '1' or 'A'"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Official line color, hex"
+        },
+        "transportType": {
+          "type": "string",
+          "description": "Generic on purpose for future expansion beyond metro.",
+          "enum": [
+            "metro",
+            "bus",
+            "tram",
+            "brt",
+            "commuter_rail",
+            "other"
+          ]
+        },
+        "stationIds": {
+          "type": "array",
+          "description": "Ordered station ids, in one canonical direction (direction 0). Used for drawing the line and computing stop sequence.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "operatingHours": {
+          "type": "object",
+          "description": "General-purpose display info, not the authoritative schedule (that's stopTimes).",
+          "properties": {
+            "firstTrain": {
+              "type": "string",
+              "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+            },
+            "lastTrain": {
+              "type": "string",
+              "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+            }
+          }
+        }
+      }
+    },
+    "station": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "lat",
+        "lng",
+        "lineIds"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/properties/localizedText"
+        },
+        "lat": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lng": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "lineIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "All lines serving this station — more than one entry means it's an interchange station."
+        },
+        "accessibility": {
+          "type": "object",
+          "description": "Accessibility features at this station.",
+          "properties": {
+            "elevator": {
+              "type": "boolean"
+            },
+            "ramp": {
+              "type": "boolean"
+            },
+            "tactilePaving": {
+              "type": "boolean"
+            },
+            "accessibleRestroom": {
+              "type": "boolean"
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "entrances": {
+          "type": "array",
+          "description": "Optional — individual entrance/exit points, useful for large stations.",
+          "items": {
+            "type": "object",
+            "required": [
+              "lat",
+              "lng"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "#/properties/localizedText"
+              },
+              "lat": {
+                "type": "number"
+              },
+              "lng": {
+                "type": "number"
+              },
+              "wheelchairAccessible": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

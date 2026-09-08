@@ -236,5 +236,29 @@
   "shellTabAccount": "Account",
   "@shellTabAccount": { "description": "Main bottom nav bar tab label." },
   "shellTabSettings": "Settings",
-  "@shellTabSettings": { "description": "Main bottom nav bar tab label." }
+  "@shellTabSettings": { "description": "Main bottom nav bar tab label." },
+
+  "mapOverviewTab": "Overview",
+  "@mapOverviewTab": { "description": "Map screen's first segmented-control tab: the real map showing every mode at once (Persian: کامل)." },
+
+  "mapTripNextStationEta": "Next station in {minutes} min",
+  "@mapTripNextStationEta": {
+    "description": "Selected vehicle's compact tooltip: time remaining to its next station.",
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+  "mapTripArrivingNow": "Arriving now",
+  "@mapTripArrivingNow": { "description": "Shown instead of mapTripNextStationEta when under a minute remains." },
+  "mapTripDepartedAt": "Departed {time}",
+  "@mapTripDepartedAt": {
+    "description": "Selected vehicle's compact tooltip: the trip's overall departure time (HH:MM, 24-hour).",
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "mapTripMoreButton": "More",
+  "@mapTripMoreButton": { "description": "Opens the full trip detail sheet from the compact tooltip." },
+  "mapTripDetailTitle": "Trip details",
+  "@mapTripDetailTitle": { "description": "Full trip detail bottom sheet's title." },
+  "mapTripStationsHeading": "Stations",
+  "@mapTripStationsHeading": { "description": "Heading above the full station/time list in the trip detail sheet." },
+  "mapTripCloseTooltip": "Close",
+  "@mapTripCloseTooltip": { "description": "Closes the selected vehicle's compact tooltip, deselecting it." }
 }

@@ -45,7 +45,7 @@ body:
     id: source
     attributes:
       label: Source
-      description: Where does this information come from? An official GTFS feed, the transit authority's website/map, OpenStreetMap, or your own knowledge of the system. Links are extremely helpful — see the `meta.source` field in schema.json for why this matters.
+      description: Where does this information come from? An official GTFS feed, the transit authority's website/map, OpenStreetMap, or your own knowledge of the system. Links are extremely helpful — see the `meta.source` field in structure.schema.json/schedule.schema.json for why this matters.
       placeholder: e.g. https://example-metro-authority.gov/map, or "I ride this line daily"
     validations:
       required: true

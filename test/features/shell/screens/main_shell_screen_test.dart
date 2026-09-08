@@ -41,7 +41,8 @@ void main() {
   ) async {
     await tester.pumpWidget(_appUnderTest());
 
-    await tester.tap(find.bySemanticsLabel('Map'));
+    // Map is a real, built screen now — Saved is still a placeholder tab.
+    await tester.tap(find.bySemanticsLabel('Saved'));
     await tester.pumpAndSettle();
 
     expect(find.text('This section is coming soon.'), findsOneWidget);
@@ -49,6 +50,17 @@ void main() {
     // findsNothing here just means it's not the *visible* child, which
     // AppBar title duplication would otherwise make ambiguous to check
     // directly; the placeholder's own presence is the real assertion.
+  });
+
+  testWidgets('switching to Map shows the real Map screen, not a '
+      'placeholder', (tester) async {
+    await tester.pumpWidget(_appUnderTest());
+
+    await tester.tap(find.bySemanticsLabel('Map'));
+    await tester.pump();
+
+    expect(find.text('This section is coming soon.'), findsNothing);
+    expect(find.text('Overview'), findsOneWidget); // segmented control tab
   });
 
   testWidgets('switching tabs and back preserves Home without rebuilding '

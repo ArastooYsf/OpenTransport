@@ -8,6 +8,7 @@ import 'package:open_transport/l10n/generated/app_localizations.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 
 import '../../../test_utils/fake_preferences_repository.dart';
+import '../../../test_utils/pump_until_found.dart';
 
 Widget _appUnderTest(Locale locale) {
   return ProviderScope(
@@ -22,20 +23,6 @@ Widget _appUnderTest(Locale locale) {
   );
 }
 
-/// Pumps until [finder] finds something or [timeout] elapses — the city
-/// data (and so the dynamic options list) loads via a real, non-fake-clock
-/// asset read, so a single fixed-duration pump can race it under load.
-Future<void> _pumpUntilFound(
-  WidgetTester tester,
-  Finder finder, {
-  Duration timeout = const Duration(seconds: 10),
-}) async {
-  final end = DateTime.now().add(timeout);
-  while (finder.evaluate().isEmpty && DateTime.now().isBefore(end)) {
-    await tester.pump(const Duration(milliseconds: 100));
-  }
-}
-
 void main() {
   setUp(() {
     // See station_list_screen_test.dart's identical setUp: without this,
@@ -48,7 +35,7 @@ void main() {
       'English (LTR) — Tehran has no BRT/bus/tram data, so those tiles '
       "don't appear", (tester) async {
     await tester.pumpWidget(_appUnderTest(const Locale('en')));
-    await _pumpUntilFound(tester, find.text('Metro'));
+    await pumpUntilFound(tester, find.text('Metro'));
 
     expect(find.text('Smart'), findsOneWidget);
     expect(
@@ -69,7 +56,7 @@ void main() {
 
   testWidgets('renders Smart and Metro in Persian (RTL)', (tester) async {
     await tester.pumpWidget(_appUnderTest(const Locale('fa')));
-    await _pumpUntilFound(tester, find.text('مترو'));
+    await pumpUntilFound(tester, find.text('مترو'));
 
     expect(find.text('همگانی'), findsOneWidget);
     expect(find.text('مترو'), findsOneWidget);
@@ -83,7 +70,7 @@ void main() {
 
   testWidgets('tapping Metro opens a placeholder screen', (tester) async {
     await tester.pumpWidget(_appUnderTest(const Locale('en')));
-    await _pumpUntilFound(tester, find.text('Metro'));
+    await pumpUntilFound(tester, find.text('Metro'));
 
     await tester.tap(find.text('Metro'));
     await tester.pumpAndSettle();
@@ -93,7 +80,7 @@ void main() {
 
   testWidgets('tapping Smart still navigates', (tester) async {
     await tester.pumpWidget(_appUnderTest(const Locale('en')));
-    await _pumpUntilFound(tester, find.text('Smart'));
+    await pumpUntilFound(tester, find.text('Smart'));
 
     await tester.tap(find.text('Smart'));
     await tester.pumpAndSettle();
@@ -104,7 +91,7 @@ void main() {
   testWidgets('shows a country switcher and a language switcher in the top '
       'bar', (tester) async {
     await tester.pumpWidget(_appUnderTest(const Locale('en')));
-    await _pumpUntilFound(tester, find.text('Metro'));
+    await pumpUntilFound(tester, find.text('Metro'));
 
     expect(find.text('Iran'), findsOneWidget); // country switcher label
     expect(find.text('English'), findsOneWidget); // language switcher label
@@ -120,7 +107,7 @@ void main() {
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       await tester.pumpWidget(_appUnderTest(locale));
-      await _pumpUntilFound(tester, find.byIcon(PhosphorIconsRegular.train));
+      await pumpUntilFound(tester, find.byIcon(PhosphorIconsRegular.train));
       await tester.pump(const Duration(milliseconds: 400));
 
       expect(tester.takeException(), isNull);

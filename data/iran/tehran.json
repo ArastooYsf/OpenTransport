@@ -2,8 +2,8 @@
   "meta": {
     "country": "IR",
     "city": "tehran",
-    "dataVersion": "0.1.0",
-    "lastUpdated": "2026-09-06",
+    "dataVersion": "0.2.0",
+    "lastUpdated": "2026-09-08",
     "source": [
       {
         "type": "community_survey",
@@ -47,8 +47,5 @@
       "lineIds": ["tehran-line-1"],
       "accessibility": { "elevator": false, "ramp": true, "tactilePaving": false, "accessibleRestroom": false }
     }
-  ],
-  "calendar": [],
-  "trips": [],
-  "stopTimes": []
+  ]
 }

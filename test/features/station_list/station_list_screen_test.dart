@@ -6,6 +6,7 @@ import 'package:open_transport/features/station_list/screens/station_list_screen
 import 'package:open_transport/l10n/generated/app_localizations.dart';
 
 import '../../test_utils/fake_preferences_repository.dart';
+import '../../test_utils/pump_until_found.dart';
 
 Widget _appUnderTest(Locale locale) {
   return ProviderScope(
@@ -17,20 +18,6 @@ Widget _appUnderTest(Locale locale) {
       home: const StationListScreen(),
     ),
   );
-}
-
-/// Pumps until [finder] finds something or [timeout] elapses. The city data
-/// loads via a real (non-fake-clock) asset read, so a single fixed-duration
-/// pump can race it under load — poll instead of guessing a delay.
-Future<void> _pumpUntilFound(
-  WidgetTester tester,
-  Finder finder, {
-  Duration timeout = const Duration(seconds: 10),
-}) async {
-  final end = DateTime.now().add(timeout);
-  while (finder.evaluate().isEmpty && DateTime.now().isBefore(end)) {
-    await tester.pump(const Duration(milliseconds: 100));
-  }
 }
 
 void main() {
@@ -45,7 +32,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(_appUnderTest(const Locale('en')));
-    await _pumpUntilFound(tester, find.text('Tajrish'));
+    await pumpUntilFound(tester, find.text('Tajrish'));
 
     expect(find.text('Stations'), findsOneWidget);
     expect(find.text('Tajrish'), findsOneWidget);
@@ -63,7 +50,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(_appUnderTest(const Locale('fa')));
-    await _pumpUntilFound(tester, find.text('تجریش'));
+    await pumpUntilFound(tester, find.text('تجریش'));
 
     expect(find.text('ایستگاه‌ها'), findsOneWidget);
     expect(find.text('تجریش'), findsOneWidget);

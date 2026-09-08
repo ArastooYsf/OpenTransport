@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../core/widgets/placeholder_screen.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../home/screens/home_screen.dart';
+import '../../map/screens/map_screen.dart';
 import '../widgets/main_bottom_nav_bar.dart';
 
-/// The persistent post-onboarding app shell: [HomeScreen] plus four
-/// not-yet-built destinations (Map, Saved, Account, Settings — the same
+/// The persistent post-onboarding app shell: [HomeScreen], [MapScreen], and
+/// three not-yet-built destinations (Saved, Account, Settings — the same
 /// [PlaceholderScreen] pattern Home's own Metro/BRT/Smart options already
 /// use), switched between by [MainBottomNavBar].
 ///
@@ -44,7 +45,8 @@ class _MainShellScreenState extends State<MainShellScreen> {
             showWithoutAccountNotice: widget.showWithoutAccountNotice,
             showTutorialPrompt: widget.showTutorialPrompt,
           ),
-          for (final tab in ShellTab.values.skip(1))
+          const MapScreen(),
+          for (final tab in ShellTab.values.skip(2))
             PlaceholderScreen(title: tab.label(l10n), icon: tab.fillIcon),
         ],
       ),

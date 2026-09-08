@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/contrast_color.dart';
-import '../../../core/utils/hex_color.dart';
+import '../utils/contrast_color.dart';
+import '../utils/hex_color.dart';
 
 /// A rounded pill filled with a transit line's color, per design.md's
 /// "Line badge" component spec. Text color is computed for contrast rather

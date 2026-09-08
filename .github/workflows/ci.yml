@@ -38,7 +38,7 @@ jobs:
         run: flutter test
 
   validate-data:
-    name: Validate transit data against schema.json
+    name: Validate transit data against structure/schedule schemas
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

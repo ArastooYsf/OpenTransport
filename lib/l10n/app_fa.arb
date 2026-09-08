@@ -97,5 +97,15 @@
   "shellTabMap": "نقشه",
   "shellTabSaved": "ذخیره‌شده",
   "shellTabAccount": "حساب کاربری",
-  "shellTabSettings": "تنظیمات"
+  "shellTabSettings": "تنظیمات",
+
+  "mapOverviewTab": "کامل",
+
+  "mapTripNextStationEta": "ایستگاه بعد در {minutes} دقیقه",
+  "mapTripArrivingNow": "در حال رسیدن",
+  "mapTripDepartedAt": "حرکت در {time}",
+  "mapTripMoreButton": "بیشتر",
+  "mapTripDetailTitle": "جزئیات سفر",
+  "mapTripStationsHeading": "ایستگاه‌ها",
+  "mapTripCloseTooltip": "بستن"
 }

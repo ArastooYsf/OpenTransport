@@ -40,11 +40,23 @@ real world.
 
 ### 1. Understand the data format
 
-Every city lives in its own file: `data/<country-iso-code>/<city-slug>.json`
-(e.g. `data/iran/tehran.json`). The exact shape of that file is defined,
-field by field, in [`schema.json`](schema.json) — that file is the single
-source of truth; if this document and `schema.json` ever disagree, trust
-`schema.json` and please open an issue so we can fix the doc.
+Every city lives in **two** companion files, so its network shape and its
+timetable can be updated independently:
+
+- `data/<country-iso-code>/<city-slug>.json` (e.g. `data/iran/tehran.json`)
+  — lines and stations: geography, names, colors, accessibility. Changes
+  rarely. Shape defined field-by-field in
+  [`structure.schema.json`](structure.schema.json).
+- `data/<country-iso-code>/<city-slug>.schedule.json` (e.g.
+  `data/iran/tehran.schedule.json`) — `calendar`/`trips`/`stopTimes`, a
+  GTFS-style timetable. Changes on its own cadence (timetable revisions).
+  Shape defined in [`schedule.schema.json`](schedule.schema.json). Its
+  `lineId`/`stationId` values must reference ids that exist in the
+  companion structure file.
+
+Both schema files are the single source of truth for their file; if this
+document and a schema ever disagree, trust the schema and please open an
+issue so we can fix the doc.
 
 A minimal station looks like this:
 
@@ -63,7 +75,8 @@ Key rules baked into the schema:
 
 - **`name` is a map, not a string.** Include at least the local-language
   name; add `en` too if you can, so the app remains usable for
-  non-local-language speakers. See `localizedText` in `schema.json`.
+  non-local-language speakers. See `localizedText` in
+  `structure.schema.json`.
 - **`color` on a line must be the real, official color** from the transit
   authority (hex, `#RRGGBB`) — never a color you picked because it "looks
   right." The whole point of `lineColor`-driven UI (see
@@ -77,10 +90,16 @@ Key rules baked into the schema:
   `community_survey`, or `other`), with a `url` or `note` for traceability.
   This is what lets someone come back in a year and re-verify the data —
   please don't skip it.
-- `calendar`, `trips`, and `stopTimes` implement a GTFS-style timetable.
-  They're **optional to fill in** for a first PR — an empty array is valid.
-  Stations and lines with correct colors and locations are useful on their
-  own; timetables can follow in a later PR.
+- The schedule file's `calendar`, `trips`, and `stopTimes` are **optional
+  to fill in** for a first PR — you can omit the `.schedule.json` file
+  entirely, or ship one with empty arrays. Stations and lines with correct
+  colors and locations are useful on their own; timetables can follow in a
+  later PR.
+- Any schedule value you *estimate* rather than take from a real feed
+  (e.g. travel times derived from station coordinates and a typical
+  operating speed, rather than an official timetable) must say so in that
+  file's `meta.source`, with a note — never present an estimate as if it
+  were official.
 
 ### 2. Find or gather the data
 
@@ -100,21 +119,23 @@ Good sources, roughly in order of preference:
 
 ### 3. Write and validate the file
 
-Add or edit the JSON under `data/<country>/<city>.json`, then validate it
-before you commit:
+Add or edit the JSON under `data/<country>/<city>.json` and/or
+`data/<country>/<city>.schedule.json`, then validate before you commit:
 
 ```bash
 python3 scripts/validate_data.py
 ```
 
-This checks **every** file under `data/` against `schema.json` and prints
-`OK`/`FAIL` per file. Fix any `FAIL` before opening a PR — CI will reject a
-PR that fails this check.
+This checks **every** file under `data/` against its matching schema
+(`structure.schema.json` or `schedule.schema.json`), cross-checks a
+schedule file's `lineId`/`stationId` references against its companion
+structure file, and prints `OK`/`FAIL` per check. Fix any `FAIL` before
+opening a PR — CI will reject a PR that fails this check.
 
 If you're adding a country/city folder structure that doesn't fit the
 current schema (e.g. a transport concept the schema doesn't model yet),
-**update `schema.json` in the same PR**, per the rule in
-[`CLAUDE.md`](CLAUDE.md): schema and this contributing guide must never
+**update the relevant schema file in the same PR**, per the rule in
+[`CLAUDE.md`](CLAUDE.md): schemas and this contributing guide must never
 drift apart.
 
 ### 4. Open a PR
@@ -137,8 +158,9 @@ exactly, and PRs that don't will be asked to change:
 - [`design.md`](design.md) — every visual decision (color, spacing,
   typography, motion) must trace back to something in this file. If your UI
   idea isn't covered by it, raise it in an issue before implementing.
-- [`schema.json`](schema.json) — the data contract, if your change touches
-  data parsing or models.
+- [`structure.schema.json`](structure.schema.json) and
+  [`schedule.schema.json`](schedule.schema.json) — the data contract, if
+  your change touches data parsing or models.
 
 ### Local setup
 

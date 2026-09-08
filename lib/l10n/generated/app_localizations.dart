@@ -565,6 +565,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get shellTabSettings;
+
+  /// Map screen's first segmented-control tab: the real map showing every mode at once (Persian: کامل).
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get mapOverviewTab;
+
+  /// Selected vehicle's compact tooltip: time remaining to its next station.
+  ///
+  /// In en, this message translates to:
+  /// **'Next station in {minutes} min'**
+  String mapTripNextStationEta(int minutes);
+
+  /// Shown instead of mapTripNextStationEta when under a minute remains.
+  ///
+  /// In en, this message translates to:
+  /// **'Arriving now'**
+  String get mapTripArrivingNow;
+
+  /// Selected vehicle's compact tooltip: the trip's overall departure time (HH:MM, 24-hour).
+  ///
+  /// In en, this message translates to:
+  /// **'Departed {time}'**
+  String mapTripDepartedAt(String time);
+
+  /// Opens the full trip detail sheet from the compact tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get mapTripMoreButton;
+
+  /// Full trip detail bottom sheet's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip details'**
+  String get mapTripDetailTitle;
+
+  /// Heading above the full station/time list in the trip detail sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Stations'**
+  String get mapTripStationsHeading;
+
+  /// Closes the selected vehicle's compact tooltip, deselecting it.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get mapTripCloseTooltip;
 }
 
 class _AppLocalizationsDelegate

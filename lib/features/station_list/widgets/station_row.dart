@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/localized_text.dart';
+import '../../../core/widgets/line_badge.dart';
 import '../../../data/models/station.dart';
 import '../../../data/models/transit_line.dart';
-import 'line_badge.dart';
 
 /// A station name paired with a badge for every line serving it, per
 /// design.md's "Station chip/row" component. More than one badge means

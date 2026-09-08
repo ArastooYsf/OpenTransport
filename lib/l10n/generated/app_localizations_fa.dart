@@ -262,4 +262,32 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get shellTabSettings => 'تنظیمات';
+
+  @override
+  String get mapOverviewTab => 'کامل';
+
+  @override
+  String mapTripNextStationEta(int minutes) {
+    return 'ایستگاه بعد در $minutes دقیقه';
+  }
+
+  @override
+  String get mapTripArrivingNow => 'در حال رسیدن';
+
+  @override
+  String mapTripDepartedAt(String time) {
+    return 'حرکت در $time';
+  }
+
+  @override
+  String get mapTripMoreButton => 'بیشتر';
+
+  @override
+  String get mapTripDetailTitle => 'جزئیات سفر';
+
+  @override
+  String get mapTripStationsHeading => 'ایستگاه‌ها';
+
+  @override
+  String get mapTripCloseTooltip => 'بستن';
 }

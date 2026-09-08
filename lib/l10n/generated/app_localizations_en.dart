@@ -268,4 +268,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shellTabSettings => 'Settings';
+
+  @override
+  String get mapOverviewTab => 'Overview';
+
+  @override
+  String mapTripNextStationEta(int minutes) {
+    return 'Next station in $minutes min';
+  }
+
+  @override
+  String get mapTripArrivingNow => 'Arriving now';
+
+  @override
+  String mapTripDepartedAt(String time) {
+    return 'Departed $time';
+  }
+
+  @override
+  String get mapTripMoreButton => 'More';
+
+  @override
+  String get mapTripDetailTitle => 'Trip details';
+
+  @override
+  String get mapTripStationsHeading => 'Stations';
+
+  @override
+  String get mapTripCloseTooltip => 'Close';
 }

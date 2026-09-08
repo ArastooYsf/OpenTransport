@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/providers/current_country_provider.dart';
+import '../models/station.dart';
 import '../models/transit_city_data.dart';
 import '../models/transit_line.dart';
 import '../repositories/transit_data_repository.dart';
@@ -30,6 +31,15 @@ final linesByIdProvider = Provider<Map<String, TransitLine>>((ref) {
   final city = ref.watch(cityDataProvider).valueOrNull;
   if (city == null) return const {};
   return {for (final line in city.lines) line.id: line};
+});
+
+/// [Station]s for the current city, indexed by id — for the Map feature's
+/// line-path/marker rendering, which looks stations up by the ids in
+/// [TransitLine.stationIds].
+final stationsByIdProvider = Provider<Map<String, Station>>((ref) {
+  final city = ref.watch(cityDataProvider).valueOrNull;
+  if (city == null) return const {};
+  return {for (final station in city.stations) station.id: station};
 });
 
 /// The distinct [TransportType]s actually present in the current city's

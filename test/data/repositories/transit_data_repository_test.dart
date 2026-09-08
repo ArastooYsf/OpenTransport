@@ -23,4 +23,32 @@ void main() {
     expect(tajrish.name['fa'], 'تجریش');
     expect(tajrish.lineIds, contains('tehran-line-1'));
   });
+
+  test('loadCity merges the companion schedule file (calendar/trips/'
+      'stopTimes) from the separate .schedule.json asset', () async {
+    const repository = TransitDataRepository();
+
+    final city = await repository.loadCity(country: 'iran', city: 'tehran');
+
+    expect(city.calendar, isNotEmpty);
+    expect(city.trips, isNotEmpty);
+    expect(city.stopTimes, isNotEmpty);
+
+    final trip = city.trips.first;
+    expect(trip.lineId, 'tehran-line-1');
+    final tripStopTimes = city.stopTimes.where(
+      (stopTime) => stopTime.tripId == trip.id,
+    );
+    expect(tripStopTimes.map((s) => s.stationId), [
+      'tehran-tajrish',
+      'tehran-imam-khomeini',
+      'tehran-rah-ahan',
+    ]);
+  });
+
+  test('getDelaySeconds is always zero (no backend algorithm yet)', () async {
+    const repository = TransitDataRepository();
+
+    expect(await repository.getDelaySeconds('tehran-line-1-d0-0000'), 0);
+  });
 }
